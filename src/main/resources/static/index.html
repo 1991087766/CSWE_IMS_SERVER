@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IMS Interface</title>
+
+    <style type="text/css">
+        .viewDiv{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background-color: ghostwhite;
+            position: absolute;
+        }
+        .Title{
+            text-align: center;
+        }
+        .viewL{
+            width: 25%;
+            height: 80%;
+            position: absolute;
+            right: 50%;
+            float: left;
+        }
+        .viewR{
+            width: 35%;
+            height: 80%;
+            margin-left: 50%;
+        }
+        .input_txt{
+            border: 2px solid rgba(113, 105, 99, 0.64);
+            border-radius: 5px;
+            width: 70%;
+        }
+        .input_textarea{
+            font-family: "微软雅黑";
+            width: 95%;
+            height: 62%;
+            overflow-y:scroll;
+            border-radius: 5px;
+            border: 2px solid rgba(113, 105, 99, 0.64);
+        }
+        .input_btn{
+            width: 100px;
+            border-radius: 5px;
+            border: 2px solid rgba(113, 105, 99, 0.64);
+            font-size: 20px;
+        }
+        pre {
+            outline: 1px solid #ccc;
+            padding: 5px;
+            margin: 5px;
+            height: 80%;
+            border: 3px solid rgba(113, 105, 99, 0.64);
+            border-radius: 3px;
+            font-family: "微软雅黑";
+        }
+        .string { color: green; }
+        .number { color: darkorange; }
+        .boolean { color: blue; }
+        .null { color: magenta; }
+        .key { color: red; }
+    </style>
+    <script type="application/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="application/javascript">
+        function syntaxHighlight(json) {
+            if (typeof json != 'string') {
+                json = JSON.stringify(json, undefined, 4);
+            }
+            json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+        function CLICK(i) {
+            document.getElementById("result").innerHTML = "";
+            if(i===1){
+                SEND("POST")
+            }else {
+                SEND("GET")
+            }
+        }
+
+        function SEND(TYPT) {
+            var uurl = document.getElementById('input_txt').value;
+            var ddata = document.getElementById('input_textarea').value;
+            console.log(document.getElementById('input_txt').value.length);
+            if(!uurl.length>0){
+                uurl = 'test'
+            }
+            console.log(uurl);
+            $.ajax({
+                type:TYPT,
+                url:"http://r1f7369747.iask.in:8805/service-0.0.2/"+uurl,
+//                url:"http://127.0.0.1:8802/"+uurl,
+                data:document.getElementById('input_textarea').value,
+                cache:false,
+                dataType:'json',
+                success:function(data){
+                    console.log(data);
+                    $('#result').html(syntaxHighlight(data));
+                },
+                error:function () {
+                    document.getElementById("result").innerHTML = "请求失败！";
+                }
+            });
+        }
+    </script>
+
+
+</head>
+<body style="margin: 0;">
+    <div class="viewDiv">
+        <div class="Title">
+            <h1>IMS Interface</h1>
+        </div>
+        <div class="viewL">
+            URL:<br>
+            <input class="input_txt" id="input_txt" type="text">
+            <input class="input_btn" type="button" onclick="" value="Clear">
+            <br><br>
+            JSON:<br>
+            <textarea class="input_textarea" id="input_textarea" ></textarea>
+            <br>
+            <input class="input_btn" type="button" onclick="" value="Clear">
+            <br><br>
+            <input class="input_btn" type="button" onclick="CLICK(0)" value="GET">
+            <input class="input_btn" type="button" onclick="CLICK(1)" value="POST">
+        </div>
+        <div class="viewR">
+            Return:<br>
+            <pre id="result" style="overflow-y:scroll;overflow-x: auto"></pre>
+        </div>
+    </div>
+</body>
+</html>
