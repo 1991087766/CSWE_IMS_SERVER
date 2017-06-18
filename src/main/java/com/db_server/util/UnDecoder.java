@@ -164,7 +164,6 @@ public class UnDecoder {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        System.out.println(result);
         return result;
     }
     public String getUnCode(String str,String ENCODE) {
@@ -177,7 +176,6 @@ public class UnDecoder {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        System.out.println(result);
         return result;
     }
 

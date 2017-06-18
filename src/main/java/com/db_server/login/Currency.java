@@ -85,12 +85,11 @@ public class Currency {
         obj = new JsonObject();
         obj.addProperty("library","db_server");
         obj.addProperty("SurfaceName","db_info");
-        obj.add("SelectName", parser.parse("['USERNAME']"));
+        obj.add("SelectName", parser.parse("['账号']"));
         list_info = new ArrayList();
         list_info.add(person.getUsername());
         obj.add("SelectValue",parser.parse(list_info.toString()));
         JsonArray jsonArray = MySqlUtil.getInstance().sql_data_select(obj,"LIKE","AND",person.getPages());
-//        System.out.println(jsonArray.toString());
         return jsonArray;
     }
     public JsonArray getCustomerService(){
@@ -98,6 +97,15 @@ public class Currency {
         obj.addProperty("library","db_server");
         obj.addProperty("SurfaceName","db_info");
         JsonArray jsonArray = MySqlUtil.getInstance().sql_data_select(obj);
+        return jsonArray;
+    }
+    public JsonArray getAdmin(){
+        obj = new JsonObject();
+        obj.addProperty("library","db_server");
+        obj.addProperty("SurfaceName","db_info");
+        obj.addProperty("SelectName", "管理员");
+        obj.addProperty("SelectValue",2);
+        JsonArray jsonArray = MySqlUtil.getInstance().sql_data_select_admin(obj);
         return jsonArray;
     }
 
@@ -129,7 +137,6 @@ public class Currency {
         list_info.add(person.getUsername());
         obj.add("SelectValue", parser.parse(list_info.toString()));
         JsonArray jsonArray = MySqlUtil.getInstance().sql_data_select(obj,"LIKE","AND",person.getPages());
-        System.out.println(jsonArray.toString());
         return jsonArray;
     }
     public JsonArray getLoginStart(String username){
@@ -140,8 +147,20 @@ public class Currency {
         list_info = new ArrayList();
         list_info.add(username);
         obj.add("SelectValue", parser.parse(list_info.toString()));
-        System.out.println("getLoginStart:"+obj.toString());
         JsonArray jsonArray = MySqlUtil.getInstance().sql_data_select(obj,"LIKE","AND");
+
+        return jsonArray;
+    }
+
+    /**
+     * 检测登录
+     * @return
+     */
+    public JsonArray getLoginInspect(){
+        JsonObject obj = new JsonObject();
+        obj.addProperty("library","db_server");
+        obj.addProperty("SurfaceName","db_login");
+        JsonArray jsonArray = MySqlUtil.getInstance().sql_data_select(obj,1);
 
         return jsonArray;
     }

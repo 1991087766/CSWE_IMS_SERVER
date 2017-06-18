@@ -78,6 +78,9 @@ public class Person_Info_name {
     @SerializedName("编号")
     private String t = null;
 
+    @SerializedName("更新时间")
+    private String u = "";
+
     private String getA() {
         return "'"+a+"',";
     }
@@ -151,13 +154,17 @@ public class Person_Info_name {
     }
 
     private String getS() {
-        return "'"+s+"'";
+        return "'"+s+"',";
     }
 
     private String getT(int i) {
         return "'"+System.currentTimeMillis()+"."+i+"',";
     }
 
+
+    private String getU() {
+        return "'"+System.currentTimeMillis()+"'";
+    }
 
     private long dateToStamp(String s)  {
         try {
@@ -188,6 +195,6 @@ public class Person_Info_name {
 
     public String getData(int i){
 
-        return "["+getT(i)+getA()+getB()+getC()+getD()+getE()+getF()+getG()+getH()+getI()+getJ()+getK()+getL()+getM()+getN()+getO()+getP()+getQ()+getR()+getS()+"]";
+        return "["+getT(i)+getA()+getB()+getC()+getD()+getE()+getF()+getG()+getH()+getI()+getJ()+getK()+getL()+getM()+getN()+getO()+getP()+getQ()+getR()+getS()+getU()+"]";
     }
 }

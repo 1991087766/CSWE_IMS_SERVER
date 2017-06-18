@@ -230,6 +230,10 @@ public class MySqlUtil {
         String WTIME = " ";
         JsonArray SelectName = jsonObject.get("SelectName").getAsJsonArray();
         JsonArray SelectValue = jsonObject.get("SelectValue").getAsJsonArray();
+
+//        System.out.println("jsonObject:"+SelectName);
+
+
         for(int i = 0;i < SelectName.size();i++){
             if(SelectName.size()>1){
                 if(i < SelectName.size()-1){
@@ -245,37 +249,41 @@ public class MySqlUtil {
         try {
 
             JsonArray SelectValueCOMMERCIAL = jsonObject.get("SelectValueCOMMERCIAL").getAsJsonArray();
-            WTIME += " ( COMMERCIAL >= "+SelectValueCOMMERCIAL.get(0).getAsInt()+" "+nexus2+" COMMERCIAL <= "+SelectValueCOMMERCIAL.get(1).getAsInt()+") ";
+            WTIME += " ( 商业险日期 >= "+SelectValueCOMMERCIAL.get(0).getAsInt()+" AND 商业险日期 <= "+SelectValueCOMMERCIAL.get(1).getAsInt()+") ";
         }catch (Exception r){
 
         }
 
         try {
             JsonArray SelectValueCOMPULSORY= jsonObject.get("SelectValueCOMPULSORY").getAsJsonArray();
-            WTIME += nexus2+ " (COMPULSORY >= "+SelectValueCOMPULSORY.get(0).getAsInt()+" "+nexus2+" COMPULSORY <= "+SelectValueCOMPULSORY.get(1).getAsInt()+") ";
+            WTIME += "AND (交强险日期 >= "+SelectValueCOMPULSORY.get(0).getAsInt()+" AND 交强险日期 <= "+SelectValueCOMPULSORY.get(1).getAsInt()+") ";
         }catch (Exception r){
 
         }
         try {
             JsonArray SelectValueREGISTER= jsonObject.get("SelectValueREGISTER").getAsJsonArray();
-            WTIME += nexus2+ " (REGISTER >= "+SelectValueREGISTER.get(0).getAsInt()+" "+nexus2+" REGISTER <= "+SelectValueREGISTER.get(1).getAsInt()+") ";
+            WTIME += "AND (登记日期 >= "+SelectValueREGISTER.get(0).getAsInt()+" AND 登记日期 <= "+SelectValueREGISTER.get(1).getAsInt()+") ";
         }catch (Exception r){
 
         }
         try {
 
             if (jsonObject.get("Binding").getAsBoolean()){
-                WTIME += nexus2+ " CUSTOMER_SERVICE = '客服'";
+                WTIME = "("+WTIME+") AND "+" 客服 = '客服'";
             }
 
         }catch (Exception r){
 
         }
         if(WHERE.replaceAll(" ","").length()>3 && WTIME.replaceAll(" ","").length()>3){
-            WHERE += nexus2+WTIME;
-        }else {
+            WHERE = "("+WHERE+") AND "+WTIME;
+        }else if (WTIME.replaceAll(" ","").length()>3){
             WHERE = WTIME;
+        }else {
+            WHERE = WHERE;
         }
+
+
         try {
             sql_connect(jsonObject.get("library").getAsString());
             if (WHERE.replaceAll(" ","").replaceAll("\t","").length()!=0){
@@ -285,6 +293,7 @@ public class MySqlUtil {
 
             ResultSet rs = status.createStatement().executeQuery("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
             try {
+//                System.out.println("pages:"+pages.toString());
                 data = (JsonArray)parser.parse(getSqlDevicesData(rs,getSelect(jsonObject.get("SurfaceName").getAsString()),pages.get("Request").getAsInt(),pages.get("each_page").getAsInt())) ;
             }catch (Exception e){
                 data = (JsonArray)parser.parse(getSqlDevicesData(rs,getSelect(jsonObject.get("SurfaceName").getAsString()),1,20)) ;
@@ -298,12 +307,16 @@ public class MySqlUtil {
         JsonArray data = new JsonArray();
         String WHERE = " ";
         String WTIME = " ";
-        System.out.println("jsonObject:"+jsonObject.toString());
-        System.out.println("SelectName:"+jsonObject.get("SelectName").getAsJsonArray().toString());
-        System.out.println("SelectValue:"+jsonObject.get("SelectValue").getAsJsonArray().toString());
+//        System.out.println("jsonObject:"+jsonObject.toString());
+//        System.out.println("SelectName:"+jsonObject.get("SelectName").getAsJsonArray().toString());
+//        System.out.println("SelectValue:"+jsonObject.get("SelectValue").getAsJsonArray().toString());
 
         JsonArray SelectName = jsonObject.get("SelectName").getAsJsonArray();
         JsonArray SelectValue = jsonObject.get("SelectValue").getAsJsonArray();
+
+//        System.out.println("jsonObject:"+SelectName);
+
+
         for(int i = 0;i < SelectName.size();i++){
             if(SelectName.size()>1){
                 if(i < SelectName.size()-1){
@@ -315,47 +328,51 @@ public class MySqlUtil {
                 WHERE += SelectName.get(i).getAsString()+" "+nexus1+" '"+SelectValue.get(i).getAsString()+"' ";
             }
         }
+//        System.out.println("WHERE:"+WHERE);
         try {
 
             JsonArray SelectValueCOMMERCIAL = jsonObject.get("SelectValueCOMMERCIAL").getAsJsonArray();
-            WTIME += " ( COMMERCIAL >= "+SelectValueCOMMERCIAL.get(0).getAsInt()+" "+nexus2+" COMMERCIAL <= "+SelectValueCOMMERCIAL.get(1).getAsInt()+") ";
+            WTIME += " ( 商业险日期 >= "+SelectValueCOMMERCIAL.get(0).getAsInt()+" AND 商业险日期 <= "+SelectValueCOMMERCIAL.get(1).getAsInt()+") ";
         }catch (Exception r){
 
         }
 
         try {
             JsonArray SelectValueCOMPULSORY= jsonObject.get("SelectValueCOMPULSORY").getAsJsonArray();
-            WTIME += nexus2+ " (COMPULSORY >= "+SelectValueCOMPULSORY.get(0).getAsInt()+" "+nexus2+" COMPULSORY <= "+SelectValueCOMPULSORY.get(1).getAsInt()+") ";
+            WTIME += "AND (交强险日期 >= "+SelectValueCOMPULSORY.get(0).getAsInt()+" AND 交强险日期 <= "+SelectValueCOMPULSORY.get(1).getAsInt()+") ";
         }catch (Exception r){
 
         }
         try {
             JsonArray SelectValueREGISTER= jsonObject.get("SelectValueREGISTER").getAsJsonArray();
-            WTIME += nexus2+ " (REGISTER >= "+SelectValueREGISTER.get(0).getAsInt()+" "+nexus2+" REGISTER <= "+SelectValueREGISTER.get(1).getAsInt()+") ";
+            WTIME += "AND (登记日期 >= "+SelectValueREGISTER.get(0).getAsInt()+" AND 登记日期 <= "+SelectValueREGISTER.get(1).getAsInt()+") ";
         }catch (Exception r){
 
         }
-
         try {
 
             if (jsonObject.get("Binding").getAsBoolean()){
-                WTIME += nexus2+ " CUSTOMER_SERVICE = '客服'";
+                WTIME = "("+WTIME+") AND "+" 客服 = '客服'";
             }
 
         }catch (Exception r){
 
         }
         if(WHERE.replaceAll(" ","").length()>3 && WTIME.replaceAll(" ","").length()>3){
-            WHERE += nexus2+WTIME;
-        }else {
+            WHERE = "("+WHERE+") AND "+WTIME;
+        }else if (WTIME.replaceAll(" ","").length()>3){
             WHERE = WTIME;
+        }else {
+            WHERE = WHERE;
         }
+
+
         try {
             sql_connect(jsonObject.get("library").getAsString());
             if (WHERE.replaceAll(" ","").replaceAll("\t","").length()!=0){
                 WHERE = " WHERE "+WHERE;
             }
-            System.out.println("SELECT:"+"SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
+//            System.out.println("SELECT:"+"SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
 
             ResultSet rs = status.createStatement().executeQuery("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
             data = (JsonArray)parser.parse(getSqlDevicesData(rs,getSelect(jsonObject.get("SurfaceName").getAsString()),1,20)) ;
@@ -366,13 +383,37 @@ public class MySqlUtil {
     }
     public JsonArray sql_data_select(JsonObject jsonObject){
         JsonArray data = new JsonArray();
+        try {
+            sql_connect(jsonObject.get("library").getAsString());
+            ResultSet rs = status.createStatement().executeQuery("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString());
+            data = (JsonArray)parser.parse(getSqlDevicesData(rs)) ;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return data;
+    }
+    public JsonArray sql_data_select_admin(JsonObject jsonObject){
+        JsonArray data = new JsonArray();
+        try {
+            sql_connect(jsonObject.get("library").getAsString());
+            ResultSet rs = status.createStatement().executeQuery(
+                    "SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+" WHERE "+jsonObject.get("SelectName").getAsString()+" = "+jsonObject.get("SelectValue").getAsString()
+            );
+            data = (JsonArray)parser.parse(getSqlDevicesData(rs)) ;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return data;
+    }
+    public JsonArray sql_data_select(JsonObject jsonObject,int a){
+        JsonArray data = new JsonArray();
         String WHERE = " ";
         try {
             sql_connect(jsonObject.get("library").getAsString());
-            System.out.println("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
+//            System.out.println("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
             ResultSet rs = status.createStatement().executeQuery("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
-            data = (JsonArray)parser.parse(getSqlDevicesData(rs)) ;
-            System.out.println(data);
+            data = (JsonArray)parser.parse(getSqlDevicesDataLogin(rs)) ;
+//            System.out.println(data);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -400,45 +441,50 @@ public class MySqlUtil {
         try {
 
             JsonArray SelectValueCOMMERCIAL = jsonObject.get("SelectValueCOMMERCIAL").getAsJsonArray();
-            WTIME += " ( COMMERCIAL >= "+SelectValueCOMMERCIAL.get(0).getAsInt()+" "+nexus2+" COMMERCIAL <= "+SelectValueCOMMERCIAL.get(1).getAsInt()+") ";
+            WTIME += " ( 商业险日期 >= "+SelectValueCOMMERCIAL.get(0).getAsInt()+" AND 商业险日期 <= "+SelectValueCOMMERCIAL.get(1).getAsInt()+") ";
         }catch (Exception r){
 
         }
 
         try {
             JsonArray SelectValueCOMPULSORY= jsonObject.get("SelectValueCOMPULSORY").getAsJsonArray();
-            WTIME += nexus2+ " (COMPULSORY >= "+SelectValueCOMPULSORY.get(0).getAsInt()+" "+nexus2+" COMPULSORY <= "+SelectValueCOMPULSORY.get(1).getAsInt()+") ";
+            WTIME += "AND (交强险日期 >= "+SelectValueCOMPULSORY.get(0).getAsInt()+" AND 交强险日期 <= "+SelectValueCOMPULSORY.get(1).getAsInt()+") ";
         }catch (Exception r){
 
         }
         try {
             JsonArray SelectValueREGISTER= jsonObject.get("SelectValueREGISTER").getAsJsonArray();
-            WTIME += nexus2+ " (REGISTER >= "+SelectValueREGISTER.get(0).getAsInt()+" "+nexus2+" REGISTER <= "+SelectValueREGISTER.get(1).getAsInt()+") ";
+            WTIME += "AND (登记日期 >= "+SelectValueREGISTER.get(0).getAsInt()+" AND 登记日期 <= "+SelectValueREGISTER.get(1).getAsInt()+") ";
         }catch (Exception r){
 
         }
         try {
 
             if (jsonObject.get("Binding").getAsBoolean()){
-                WTIME += nexus2+ " CUSTOMER_SERVICE = '客服'";
+                WTIME = "("+WTIME+") AND "+" 客服 = '客服'";
             }
 
         }catch (Exception r){
 
         }
         if(WHERE.replaceAll(" ","").length()>3 && WTIME.replaceAll(" ","").length()>3){
-            WHERE += nexus2+WTIME;
-        }else {
+            WHERE = "("+WHERE+") AND "+WTIME;
+        }else if (WTIME.replaceAll(" ","").length()>3){
             WHERE = WTIME;
+        }else {
+            WHERE = WHERE;
         }
         try {
             sql_connect(jsonObject.get("library").getAsString());
             if (WHERE.replaceAll(" ","").replaceAll("\t","").length()!=0){
                 WHERE = " WHERE "+WHERE;
             }
+
+//            System.out.println("COUNT:"+"SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
             ResultSet rs  = status.createStatement().executeQuery("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
             rs.last();
             data = rs.getRow();
+//            System.out.println("COUNT:"+data);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -454,33 +500,67 @@ public class MySqlUtil {
         int return_data = 0;
         String SET = "";
         String WHERE = "";
-//        System.out.println("sql_data_alter:"+jsonObject1.toString());
-        for(int i = 0; i<jsonObject1.get("SelectName").getAsJsonArray().size();i++){
-            if(jsonObject1.get("SelectName").getAsJsonArray().size()>1){
-                if(i < jsonObject1.get("SelectName").getAsJsonArray().size()-1){
-                    WHERE += jsonObject1.get("SelectName").getAsJsonArray().get(i).getAsString()+" LIKE '"+jsonObject1.get("SelectValue").getAsJsonArray().get(i).getAsString()+"' AND ";
+
+        if(jsonObject1.get("SelectName").isJsonArray()){
+            JsonArray SelectName = jsonObject1.get("SelectName").getAsJsonArray();
+            JsonArray SelectValue = jsonObject1.get("SelectValue").getAsJsonArray();
+            for(int i = 0;i < SelectName.size();i++){
+                if(SelectName.size()>1){
+                    if(i < SelectName.size()-1){
+                        WHERE += SelectName.get(i).getAsString()+" like '"+SelectValue.get(i).getAsString()+"' OR ";
+                    }else{
+                        WHERE += SelectName.get(i).getAsString()+" like '"+SelectValue.get(i).getAsString()+"' ";
+                    }
                 }else{
-                    WHERE += jsonObject1.get("SelectName").getAsJsonArray().get(i).getAsString()+" LIKE '"+jsonObject1.get("SelectValue").getAsJsonArray().get(i).getAsString()+"'";
+                    WHERE += SelectName.get(i).getAsString()+" like '"+SelectValue.get(i).getAsString()+"' ";
                 }
-            }else{
-                WHERE += jsonObject1.get("SelectName").getAsJsonArray().get(i).getAsString()+" LIKE '"+jsonObject1.get("SelectValue").getAsJsonArray().get(i).getAsString()+"'";
+            }
+        }else {
+            JsonArray SelectValue = jsonObject1.get("SelectValue").getAsJsonArray();
+            for(int i = 0;i < SelectValue.size();i++){
+                if(SelectValue.size()>1){
+                    if(i < SelectValue.size()-1){
+                        WHERE += jsonObject1.get("SelectName").getAsString()+" like '"+SelectValue.get(i).getAsString()+"' OR ";
+                    }else{
+                        WHERE += jsonObject1.get("SelectName").getAsString()+" like '"+SelectValue.get(i).getAsString()+"' ";
+                    }
+                }else{
+                    WHERE += jsonObject1.get("SelectName").getAsString()+" like '"+SelectValue.get(i).getAsString()+"' ";
+                }
             }
         }
-        for(int i = 0; i<jsonObject1.get("ColumnName").getAsJsonArray().size();i++){
-            if(jsonObject1.get("ColumnName").getAsJsonArray().size()>1){
-                if(i < jsonObject1.get("ColumnName").getAsJsonArray().size()-1){
-                    SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"',";
+        if(jsonObject1.get("ColumnName").isJsonArray()){
+            for(int i = 0; i<jsonObject1.get("ColumnName").getAsJsonArray().size();i++){
+                if(jsonObject1.get("ColumnName").getAsJsonArray().size()>1){
+                    if(i < jsonObject1.get("ColumnName").getAsJsonArray().size()-1){
+                        SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"',";
+                    }else{
+                        SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"'";
+                    }
                 }else{
                     SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"'";
                 }
-            }else{
-                SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"'";
+            }
+        }else {
+            for(int i = 0; i<jsonObject1.get("Value").getAsJsonArray().size();i++){
+                if(jsonObject1.get("Value").getAsJsonArray().size()>1){
+                    if(i < jsonObject1.get("Value").getAsJsonArray().size()-1){
+                        SET += jsonObject1.get("ColumnName").getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"',";
+                    }else{
+                        SET += jsonObject1.get("ColumnName").getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"'";
+                    }
+                }else{
+                    SET += jsonObject1.get("ColumnName").getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"'";
+                }
             }
         }
+
+
         try {
             sql_connect(jsonObject1.get("library").getAsString());
+//            System.out.println("UPDATE "+jsonObject1.get("SurfaceName").getAsString()+" SET "+SET+" WHERE "+WHERE);
             return_data = status.createStatement().executeUpdate("UPDATE "+jsonObject1.get("SurfaceName").getAsString()+" SET "+SET+" WHERE "+WHERE);
-
+//            System.out.println("return_data:"+return_data);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -496,20 +576,50 @@ public class MySqlUtil {
     public int sql_data_del(JsonObject jsonObject){
         int return_data = 0;
         String WHERE = "";
+
+        WHERE = jsonObject.get("SelectName").getAsString()+" like '"+jsonObject.get("SelectValue").getAsString()+"' ";
         try {
-            sql_connect(jsonObject.get("library").toString());
-            for(int i = 0;i < jsonObject.get("SelectValue").getAsJsonArray().size();i++){
-                if(jsonObject.get("SelectValue").getAsJsonArray().get(i).getAsString()!=""
-                        &&jsonObject.get("SelectValue").getAsJsonArray().get(i).getAsString()!=null){
-                    WHERE = jsonObject.get("SelectName").getAsString()+" LIKE '"+jsonObject.get("SelectValue").getAsJsonArray().get(i).getAsString()+"'";
-                    return_data = status.createStatement().executeUpdate("DELETE FROM "+jsonObject.get("SurfaceName").toString()+" WHERE "+WHERE);
-                }
-            }
+            sql_connect(jsonObject.get("library").getAsString());
+//            System.out.println("DELETE FROM "+jsonObject.get("SurfaceName").getAsString()+" WHERE "+WHERE);
+            return_data = status.createStatement().executeUpdate("DELETE FROM "+jsonObject.get("SurfaceName").getAsString()+" WHERE "+WHERE);
+
 //            System.out.println("return_data:"+return_data);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return return_data ;
+    }
+    public boolean sql_data_del(JsonObject jsonObject,String SurfaceNameA,String SurfaceNameB){
+        int return_data = 0;
+        String WHERE = "";
+
+        JsonArray SelectValue = jsonObject.get("SelectValue").getAsJsonArray();
+        for(int i = 0;i < SelectValue.size();i++){
+            if(SelectValue.size()>1){
+                if(i < SelectValue.size()-1){
+                    WHERE += jsonObject.get("SelectName").getAsString()+" like '"+SelectValue.get(i).getAsString()+"' OR ";
+                }else{
+                    WHERE += jsonObject.get("SelectName").getAsString()+" like '"+SelectValue.get(i).getAsString()+"' ";
+                }
+            }else{
+                WHERE += jsonObject.get("SelectName").getAsString()+" like '"+SelectValue.get(i).getAsString()+"' ";
+            }
+        }
+
+
+        try {
+            sql_connect(jsonObject.get("library").getAsString());
+//            System.out.println("INSERT INTO "+SurfaceNameB+" SELECT * FROM "+SurfaceNameA+" WHERE "+WHERE);
+            return_data = status.prepareStatement("INSERT INTO "+SurfaceNameB+" SELECT * FROM "+SurfaceNameA+" WHERE "+WHERE).executeUpdate();
+//            System.out.println("DELETE FROM "+SurfaceNameB+" WHERE "+WHERE);
+            return_data = status.createStatement().executeUpdate("DELETE FROM "+SurfaceNameA+" WHERE "+WHERE);
+
+//            System.out.println("return_data:"+return_data);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true ;
     }
 
     /**
@@ -582,18 +692,19 @@ public class MySqlUtil {
                             }
                             if (i>= each_page*(Request-1)&&i<each_page*Request-1)
                             data = data+"{" +
-                                    "\"ID\":\""+rs.getString(1)+"\"," +
-                                    "\"USERNAME\":\""+rs.getString(2)+"\"," +
-                                    "\"PWD\":\""+rs.getString(3)+"\"," +
-                                    "\"GENDER\":\""+rs.getString(4)+"\"," +
-                                    "\"NUMBER\":\""+rs.getString(5)+"\"," +
-                                    "\"DEPARTMENT\":\""+rs.getString(6)+"\"," +
-                                    "\"ADDRESS\":\""+rs.getString(7)+"\"," +
-                                    "\"PHONE\":\""+rs.getString(8)+"\"," +
-                                    "\"MAIL\":\""+rs.getString(9)+"\"," +
-                                    "\"ICON\":\""+rs.getString(10)+"\"," +
-                                    "\"ADMIN\":"+rs.getInt(11)+","+
-                                    "\"CUSTOMER_SERVICE\":\""+rs.getString(12) +
+                                    "\"编号\":\""+rs.getString(1)+"\"," +
+                                    "\"账号\":\""+rs.getString(2)+"\"," +
+                                    "\"密码\":\""+rs.getString(3)+"\"," +
+                                    "\"性别\":\""+rs.getString(4)+"\"," +
+                                    "\"混编\":\""+rs.getString(5)+"\"," +
+                                    "\"部门\":\""+rs.getString(6)+"\"," +
+                                    "\"地址\":\""+rs.getString(7)+"\"," +
+                                    "\"手机\":\""+rs.getString(8)+"\"," +
+                                    "\"邮件\":\""+rs.getString(9)+"\"," +
+                                    "\"头像\":\""+rs.getString(10)+"\"," +
+                                    "\"管理员\":"+rs.getInt(11)+","+
+                                    "\"姓名\":\""+rs.getString(12)+"\"," +
+                                    "\"更新时间\":\""+rs.getString(13) +
                                     "\"}";
                             i++;
                         }
@@ -613,7 +724,9 @@ public class MySqlUtil {
                             data = data+"{" +
                                     "\"USERNAME\":\""+rs.getString(1)+"\"," +
                                     "\"ACCESS_TOKEN\":\""+rs.getString(2)+"\"," +
-                                    "\"IP\":\""+rs.getString(3)+"\"}";
+                                    "\"IP\":\""+rs.getString(3)+"\"," +
+                                    "\"ADDRESS\":\""+rs.getString(4)+"\"," +
+                                    "\"TIME\":\""+rs.getString(5)+"\"}";
                             i++;
                         }
                     }catch (Exception e){
@@ -624,19 +737,23 @@ public class MySqlUtil {
                 case 4:
                     try{
                         while (rs.next()) {
-                            if(i>=1){
-                                data=data+",";
+
+                            if (i>= each_page*(Request-1)&&i<each_page*Request-1){
+                                if(i>each_page*(Request-1)){
+                                    data=data+",";
+                                }
+                                data = data+"{" +
+                                        "\"ID\":\""+rs.getString(1)+"\"," +
+                                        "\"DT\":\""+rs.getString(2)+"\"," +
+                                        "\"USERNAME\":\""+rs.getString(3)+"\"," +
+                                        "\"DEPARTMENT\":\""+rs.getString(4)+"\"," +
+                                        "\"ADDRESS\":\""+rs.getString(5)+"\"," +
+                                        "\"IP\":\""+rs.getString(6)+"\"," +
+                                        "\"CHECK\":\""+rs.getString(7) +
+                                        "\"}";
                             }
-                            if (i>= each_page*(Request-1)&&i<each_page*Request-1)
-                            data = data+"{" +
-                                    "\"ID\":\""+rs.getString(1)+"\"," +
-                                    "\"DT\":\""+rs.getString(2)+"\"," +
-                                    "\"USERNAME\":\""+rs.getString(3)+"\"," +
-                                    "\"DEPARTMENT\":\""+rs.getString(4)+"\"," +
-                                    "\"ADDRESS\":\""+rs.getString(5)+"\"," +
-                                    "\"IP\":\""+rs.getString(6)+"\"," +
-                                    "\"CHECK\":\""+rs.getString(7) +
-                                    "\"}";
+
+
                             i++;
                         }
                     }catch (Exception e){
@@ -647,18 +764,19 @@ public class MySqlUtil {
                 case 5:
                     try{
                         while (rs.next()) {
-                            if(i>=1){
-                                data=data+",";
+                            if (i>= each_page*(Request-1)&&i<each_page*Request-1) {
+                                if (i > each_page * (Request - 1)) {
+                                    data = data + ",";
+                                }
+                                data = data + "{" +
+                                        "\"ID\":\"" + rs.getString(1) + "\"," +
+                                        "\"DT\":\"" + rs.getString(2) + "\"," +
+                                        "\"USERNAME\":\"" + rs.getString(3) + "\"," +
+                                        "\"DEPARTMENT\":\"" + rs.getString(4) + "\"," +
+                                        "\"ADDRESS\":\"" + rs.getString(5) + "\"," +
+                                        "\"IP\":\"" + rs.getString(6) +
+                                        "\"}";
                             }
-                            if (i>= each_page*(Request-1)&&i<each_page*Request-1)
-                            data = data+"{" +
-                                    "\"ID\":\""+rs.getString(1)+"\"," +
-                                    "\"DT\":\""+rs.getString(2)+"\"," +
-                                    "\"USERNAME\":\""+rs.getString(3)+"\"," +
-                                    "\"DEPARTMENT\":\""+rs.getString(4)+"\"," +
-                                    "\"ADDRESS\":\""+rs.getString(5)+"\"," +
-                                    "\"IP\":\""+rs.getString(6) +
-                                    "\"}";
                             i++;
                         }
                     }catch (Exception e){
@@ -669,16 +787,18 @@ public class MySqlUtil {
                 case 6:
                     try{
                         while (rs.next()) {
-                            if(i>=1){
-                                data=data+",";
+                            if (i>= each_page*(Request-1)&&i<each_page*Request-1){
+                                if(i>each_page*(Request-1)){
+                                    data=data+",";
+                                }
+                                data = data+"{" +
+                                        "\"ID\":\""+rs.getString(1)+"\"," +
+                                        "\"SOURCE\":\""+rs.getString(2)+"\"," +
+                                        "\"THEME\":\""+rs.getString(3)+"\"," +
+                                        "\"STATE\":\""+rs.getInt(4)+"\"," +
+                                        "\"}";
                             }
-                            if (i>= each_page*(Request-1)&&i<each_page*Request-1)
-                            data = data+"{" +
-                                    "\"ID\":\""+rs.getString(1)+"\"," +
-                                    "\"SOURCE\":\""+rs.getString(2)+"\"," +
-                                    "\"THEME\":\""+rs.getString(3)+"\"," +
-                                    "\"STATE\":\""+rs.getInt(4)+"\"," +
-                                    "\"}";
+
                             i++;
                         }
                     }catch (Exception e){
@@ -689,35 +809,68 @@ public class MySqlUtil {
                 case 7:
                     try{
                         while (rs.next()) {
-                            if(i>=1){
-                                data=data+",";
-                            }
-                            if (i>= each_page*(Request-1)&&i<each_page*Request-1){
+
+                            if (i>= each_page*(Request-1)&&i<each_page*Request){
+                                if(i>each_page*(Request-1)){
+                                    data=data+",";
+                                }
                                 No++;
                                 data = data+"{" +
                                         "\"No.\":"+No+"," +
-                                        "\"ID\":\""+rs.getString(1)+"\"," +
-                                        "\"PLATER_NUMBER\":\""+rs.getString(2)+"\"," +
-                                        "\"VIN_NO\":\""+rs.getString(3)+"\"," +
-                                        "\"CUSTUMER_NAME\":\""+rs.getString(4)+"\"," +
-                                        "\"BRAND\":\""+rs.getString(5)+"\"," +
-                                        "\"MODEL\":\""+rs.getString(6)+"\"," +
-                                        "\"ENGINE\":\""+rs.getString(7)+"\"," +
-                                        "\"FIXEDPHONE\":\""+rs.getString(8)+"\"," +
-                                        "\"PHONE\":\""+rs.getString(9)+"\"," +
-                                        "\"IDCARD\":\""+rs.getString(10)+"\"," +
-                                        "\"CARSEAT\":"+rs.getInt(11)+"," +
-                                        "\"COMMERCIAL\":"+rs.getLong(12)+"," +
-                                        "\"COMPULSORY\":"+rs.getLong(13)+"," +
-                                        "\"REGISTER\":"+rs.getLong(14)+"," +
-                                        "\"ADDRESS\":\""+rs.getString(15)+"\","+
-                                        "\"STATE\":\""+rs.getString(16)+"\","+
-                                        "\"REMARKS\":\""+rs.getString(17)+"\","+
-                                        "\"CARPRICE\":\""+rs.getString(18)+"\","+
-                                        "\"TheFirstTime\":\""+rs.getString(19)+"\","+
-                                        "\"CUSTOMER_SERVICE\":\""+rs.getString(20) +
+                                        "\"编号\":\""+rs.getString(1)+"\"," +
+                                        "\"车牌号\":\""+rs.getString(2)+"\"," +
+                                        "\"车架号\":\""+rs.getString(3)+"\"," +
+                                        "\"客户名称\":\""+rs.getString(4)+"\"," +
+                                        "\"品牌\":\""+rs.getString(5)+"\"," +
+                                        "\"车型号\":\""+rs.getString(6)+"\"," +
+                                        "\"发动机号\":\""+rs.getString(7)+"\"," +
+                                        "\"固定电话\":\""+rs.getString(8)+"\"," +
+                                        "\"手机\":\""+rs.getString(9)+"\"," +
+                                        "\"身份证号\":\""+rs.getString(10)+"\"," +
+                                        "\"车座位\":"+rs.getInt(11)+"," +
+                                        "\"商业险日期\":"+rs.getLong(12)+"," +
+                                        "\"交强险日期\":"+rs.getLong(13)+"," +
+                                        "\"登记日期\":"+rs.getLong(14)+"," +
+                                        "\"地址\":\""+rs.getString(15)+"\","+
+                                        "\"状态\":\""+rs.getString(16)+"\","+
+                                        "\"备注\":\""+rs.getString(17)+"\","+
+                                        "\"汽车价格\":\""+rs.getString(18)+"\","+
+                                        "\"初保\":\""+rs.getString(19)+"\","+
+                                        "\"客服\":\""+rs.getString(20)+"\","+
+                                        "\"更新时间\":\""+rs.getString(21)+
                                         "\"}";
-//                                System.out.println("data:"+data);
+                            }
+
+                            i++;
+                        }
+                        No=0;
+
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        return "[]";
+                    }
+
+                    break;
+                case 11:
+                    try{
+                        while (rs.next()) {
+
+                            if (i>= each_page*(Request-1)&&i<each_page*Request){
+                                if(i>each_page*(Request-1)){
+                                    data=data+",";
+                                }
+                                No++;
+                                data = data+"{" +
+                                        "\"No.\":"+No+"," +
+                                        "\"编号\":\""+rs.getString(1)+"\"," +
+                                        "\"姓名\":\""+rs.getString(2)+"\"," +
+                                        "\"部门\":\""+rs.getString(3)+"\"," +
+                                        "\"管理\":\""+rs.getString(4)+"\"," +
+                                        "\"状态\":\""+rs.getString(5)+"\"," +
+                                        "\"入职时间\":\""+rs.getString(6)+"\"," +
+                                        "\"离职时间\":\""+rs.getString(7)+"\"," +
+                                        "\"地址\":\""+rs.getString(8)+
+                                        "\"}";
                             }
 
                             i++;
@@ -734,6 +887,7 @@ public class MySqlUtil {
 
             data=data+"]";
             rs.close();
+            sql_close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -761,6 +915,42 @@ public class MySqlUtil {
             data=data+"]";
 
             rs.close();
+            sql_close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return data;
+    }
+    public String getSqlDevicesDataLogin(ResultSet rs){
+        String data = "[";
+        int i = 0;
+        try {
+            try{
+                while (rs.next()) {
+
+                    if(i>0){
+                        data=data+",";
+                    }
+                    data = data+"{" +
+                            "\"USERNAME\":\""+rs.getString(1)+"\"," +
+                            "\"ACCESS_TOKEN\":\""+rs.getString(2)+"\"," +
+                            "\"IP\":\""+rs.getString(3)+"\"," +
+                            "\"ADDRESS\":\""+rs.getString(4)+"\"," +
+                            "\"TIME\":\""+rs.getString(5)+"\"}";
+
+
+                    i++;
+                }
+
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+                return "[]";
+            }
+
+            data=data+"]";
+
+            rs.close();
+            sql_close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -786,17 +976,12 @@ public class MySqlUtil {
             select = 9;
         }else if(SurfaceName.equals("del_new")){
             select = 10;
+        }else if(SurfaceName.equals("db_department")){
+            select = 11;
         }
         return select;
     }
 
-    String a;
-//    public void sql_data_alter_autoadd(String library,String SurfaceName,String LineName, String AlterLineName){
-//        a = MySqlUtil.getInstance().sql_data_select(SurfaceName,LineName,AlterLineName,0 ,"NAME");
-////        System.out.println("查询返回值："+a);
-//        MySqlUtil.getInstance().sql_data_alter(library,SurfaceName,LineName,Integer.parseInt(a.substring(a.indexOf("value:")+6,a.indexOf("}")))+1);
-//        MySqlUtil.getInstance().sql_close();
-//    }
 
     public static void json(){
 //        "[{'a1','a2','a3'},{'b1','b2','b3'},{'c1','c2','c3'}]"

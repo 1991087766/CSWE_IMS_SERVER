@@ -94,16 +94,21 @@
         }
 
         function SEND(TYPT) {
+            var server;
+            console.log(document.getElementById("server").checked);
+            if(document.getElementById("server").checked){
+                server = "http://127.0.0.1:8802/"
+            }else {
+                server = "http://r1f7369747.iask.in:8805/service-0.0.2/"
+            }
             var uurl = document.getElementById('input_txt').value;
-            var ddata = document.getElementById('input_textarea').value;
             console.log(document.getElementById('input_txt').value.length);
             if(!uurl.length>0){
                 uurl = 'test'
             }
-            console.log(uurl);
             $.ajax({
                 type:TYPT,
-                url:"http://r1f7369747.iask.in:8805/service-0.0.2/"+uurl,
+                url:server+uurl,
 //                url:"http://127.0.0.1:8802/"+uurl,
                 data:document.getElementById('input_textarea').value,
                 cache:false,
@@ -127,6 +132,11 @@
             <h1>IMS Interface</h1>
         </div>
         <div class="viewL">
+            <form action="" method="get">
+                Server<br /><br />
+                <label><input id="server" type="checkbox"  value=""/>localhost </label>
+                <label><input name="Fruit" type="checkbox" value="false" />r1f7369747.iask.in </label>
+            </form>
             URL:<br>
             <input class="input_txt" id="input_txt" type="text">
             <input class="input_btn" type="button" onclick="" value="Clear">

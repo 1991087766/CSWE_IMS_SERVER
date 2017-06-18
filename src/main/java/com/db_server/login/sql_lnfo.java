@@ -7,38 +7,41 @@ import com.google.gson.annotations.SerializedName;
  */
 public class sql_lnfo {
 
-    @SerializedName("ID")
+    @SerializedName("编号")
     private String ID;
 
-    @SerializedName("USERNAME")
+    @SerializedName("账号")
     private String USERNAME;
 
-    @SerializedName("PWD")
+    @SerializedName("密码")
     private String PWD;
 
-    @SerializedName("GENDER")
+    @SerializedName("性别")
     private String GENDER;
 
-    @SerializedName("NUMBER")
+    @SerializedName("混编")
     private String NUMBER;
 
-    @SerializedName("DEPARTMENT")
+    @SerializedName("部门")
     private String DEPARTMENT;
 
-    @SerializedName("ADDRESS")
+    @SerializedName("地址")
     private String ADDRESS;
 
-    @SerializedName("PHONE")
+    @SerializedName("手机")
     private String PHONE;
 
-    @SerializedName("MAIL")
+    @SerializedName("邮件")
     private String MAIL;
 
-    @SerializedName("ICON")
+    @SerializedName("头像")
     private String ICON;
 
-    @SerializedName("ADMIN")
+    @SerializedName("管理员")
     private int ADMIN;
+
+    @SerializedName("更新时间")
+    private String UPDATE;
 
     public String getID() {
         return ID;
@@ -82,6 +85,10 @@ public class sql_lnfo {
 
     public int getADMIN() {
         return ADMIN;
+    }
+
+    public String getUPDATE() {
+        return UPDATE;
     }
 
 }

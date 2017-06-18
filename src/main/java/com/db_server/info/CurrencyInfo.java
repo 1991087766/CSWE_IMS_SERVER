@@ -59,12 +59,12 @@ public class CurrencyInfo {
      * @param person_information
      * @return
      */
-    public JsonArray getInfoList(Person_information person_information){
-        return MySqlUtil.getInstance().sql_data_select(setSelectInfo(person_information),"LIKE","AND",person_information.getPages());
+    public JsonArray getInfoList(Person_information person_information,JsonObject page){
+        return MySqlUtil.getInstance().sql_data_select(setSelectInfo(person_information),"LIKE","OR",page);
     }
     public JsonObject getInfoPages(Person_information person_information){
         object = new JsonObject();
-        object.addProperty("total",MySqlUtil.getInstance().sql_data_count(setSelectInfo(person_information),"LIKE","AND"));
+        object.addProperty("total",MySqlUtil.getInstance().sql_data_count(setSelectInfo(person_information),"LIKE","OR"));
         return object;
     }
     public JsonObject setSelectInfo(Person_information person_information){
@@ -75,13 +75,13 @@ public class CurrencyInfo {
         list_info = new ArrayList();
 
         if (person_information.getCarInfo()!=null && person_information.getCarInfo()!=""&&person_information.getCarInfo().length()!=0){
-            list_title.add("PLATER_NUMBER");
-            list_title.add("PHONE");
-            list_title.add("CUSTUMER_NAME");
-            list_title.add("VIN_NO");
-            list_title.add("IDCARD");
-            list_title.add("ENGINE");
-            list_title.add("ADDRESS");
+            list_title.add("车牌号");
+            list_title.add("手机");
+            list_title.add("客户名称");
+            list_title.add("车架号");
+            list_title.add("身份证号");
+            list_title.add("发动机号");
+            list_title.add("地址");
             list_info.add("%"+person_information.getCarInfo()+"%");
             list_info.add("%"+person_information.getCarInfo()+"%");
             list_info.add("%"+person_information.getCarInfo()+"%");
@@ -90,25 +90,21 @@ public class CurrencyInfo {
             list_info.add("%"+person_information.getCarInfo()+"%");
             list_info.add("%"+person_information.getCarInfo()+"%");
         }
-//        System.out.println("??"+person_information.getCustomerService()!=null && person_information.getCustomerService()!=""&&person_information.getCustomerService().equals("ALL"));
         if (person_information.getCustomerService()!=null && person_information.getCustomerService()!=""&& !person_information.getCustomerService().equals("ALL")){
-            list_title.add("CUSTOMER_SERVICE");
+            list_title.add("客服");
             list_info.add(person_information.getCustomerService());
         }
-//        System.out.println("list_info:"+list_info);
         if (person_information.getState()!=null && person_information.getState()!="" && !person_information.getState().equals("ALL")){
-            list_title.add("STATE");
+            list_title.add("状态");
             list_info.add(person_information.getState());
         }
 
         list_info_date = new ArrayList();
-        System.out.println("getCompulsoryInsurance-startDate:"+person_information.getCompulsoryInsurance().getAsJsonObject().get("startDate").isJsonNull());
         if( !person_information.getCompulsoryInsurance().getAsJsonObject().get("startDate").isJsonNull() ){
             list_info_date.add(person_information.getCompulsoryInsurance().getAsJsonObject().get("startDate").getAsLong());
         }else {
             list_info_date.add(0);
         }
-        System.out.println("getCompulsoryInsurance-endDate:"+person_information.getCompulsoryInsurance().getAsJsonObject().get("endDate").isJsonNull());
         if( !person_information.getCompulsoryInsurance().getAsJsonObject().get("endDate").isJsonNull() ){
             list_info_date.add(person_information.getCompulsoryInsurance().getAsJsonObject().get("endDate").getAsLong());
         }else {
@@ -131,6 +127,7 @@ public class CurrencyInfo {
         obj.add("SelectName", parser.parse(list_title.toString()));
         obj.add("SelectValue",parser.parse(list_info.toString()));
         obj.addProperty("Binding", person_information.isBinding());
+
         return obj;
     }
 
@@ -150,13 +147,39 @@ public class CurrencyInfo {
      * 删除
      * @param jsonArray
      */
-    public int delInformation(JsonArray jsonArray){
+    public boolean delInformation(JsonArray jsonArray,String A,String B){
+        obj = new JsonObject();
+        obj.addProperty("library","db_server");
+        obj.addProperty("SelectName", "编号");
+        obj.add("SelectValue",jsonArray);
+        return MySqlUtil.getInstance().sql_data_del(obj,A,B);
+    }
+
+    /**
+     * 修改
+     * @param person_information
+     * @return
+     */
+    public int ChangeSalesman(Person_information person_information){
         obj = new JsonObject();
         obj.addProperty("library","db_server");
         obj.addProperty("SurfaceName","db_customer_all");
-        obj.addProperty("SelectName", "ID");
-        obj.add("SelectValue",jsonArray);
-        return MySqlUtil.getInstance().sql_data_del(obj);
+
+
+        list_info = new ArrayList();
+        for(int i = 0;i<person_information.getCheckboxModel().size();i++){
+            if(!person_information.getCheckboxModel().get(i).isJsonNull()){
+                list_info.add(person_information.getCheckboxModel().get(i).getAsString());
+            }
+        }
+
+        obj.addProperty("SelectName", "编号");
+        obj.add("SelectValue", parser.parse(list_info.toString()));
+
+        obj.add("ColumnName",parser.parse("客服"));
+        obj.add("Value",parser.parse("["+person_information.getCustomerService()+"]"));
+
+        return MySqlUtil.getInstance().sql_data_alter(obj);
     }
 
 }

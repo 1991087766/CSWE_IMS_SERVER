@@ -41,7 +41,7 @@ public class login implements EmbeddedServletContainerCustomizer {
         if (jsonArray.size()==1){
             //检查密码
             if (Currency.getInstance().getPwd(jsonArray.get(0).getAsJsonObject(),person)){
-                admin = jsonArray.get(0).getAsJsonObject().get("ADMIN").getAsInt();
+                admin = jsonArray.get(0).getAsJsonObject().get("管理员").getAsInt();
                 //检查是否登录
                 jsonArray = Currency.getInstance().getLoginStart(person);
                 if(jsonArray.size()!=1){
@@ -52,7 +52,7 @@ public class login implements EmbeddedServletContainerCustomizer {
                     return Currency.getInstance().setLoginLog(person,admin,1).toString();
                 }else{
                     //已登录,检查登录token
-                    if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),person)){
+                    if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),person)||UnDecoder.getInstance().getIp(request).equals(jsonArray.get(0).getAsJsonObject().get("IP").getAsString())){
                         Currency.getInstance().setLoginLog(person,1);
                         return Currency.getInstance().setLoginLog(person,admin,1).toString();
                     }else {

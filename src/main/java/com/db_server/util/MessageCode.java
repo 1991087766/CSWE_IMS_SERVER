@@ -35,7 +35,6 @@ public class MessageCode {
     public JsonObject getCode_1001000(){
         object = new JsonObject();
         object.addProperty("MessageCode",1001000);
-        System.out.println("MessageCode:"+object.toString());
         return object;
     }
     /**
@@ -45,7 +44,6 @@ public class MessageCode {
     public JsonObject getCode_1002000(){
         object = new JsonObject();
         object.addProperty("MessageCode",1002000);
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -58,7 +56,6 @@ public class MessageCode {
     public JsonObject getCode_1003000(){
         object = new JsonObject();
         object.addProperty("MessageCode",1003000);
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -73,7 +70,6 @@ public class MessageCode {
     public JsonObject getCode_1001000(JsonObject Object , String token, int admin){
         object = new JsonObject();
         object.addProperty("MessageCode",1001000);
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         jsonObject.add("access", getCode_userInfo(Object.get("USERNAME").getAsString(),token,admin));
@@ -89,7 +85,6 @@ public class MessageCode {
     public JsonObject getCode_1001000(JsonArray jsonArray,JsonObject pages){
         object = new JsonObject();
         object.addProperty("MessageCode",1001000);
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         jsonObject.add("information", jsonArray);
@@ -99,7 +94,6 @@ public class MessageCode {
     public JsonObject getCode_1001000(JsonArray jsonArray){
         object = new JsonObject();
         object.addProperty("MessageCode",1001000);
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         jsonObject.add("information", jsonArray);
@@ -130,7 +124,6 @@ public class MessageCode {
         object = new JsonObject();
         object.addProperty("MessageCode",1001001);
         object.addProperty("MsgInfo","用户已登录！");
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -143,7 +136,6 @@ public class MessageCode {
         object = new JsonObject();
         object.addProperty("MessageCode",1001002);
         object.addProperty("MsgInfo","用户不存在！");
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -156,7 +148,6 @@ public class MessageCode {
         object = new JsonObject();
         object.addProperty("MessageCode",1001003);
         object.addProperty("MsgInfo","密码错误！");
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -169,7 +160,6 @@ public class MessageCode {
         object = new JsonObject();
         object.addProperty("MessageCode",1001004);
         object.addProperty("MsgInfo","用户信息校验异常！");
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -182,7 +172,6 @@ public class MessageCode {
         object = new JsonObject();
         object.addProperty("MessageCode",1001005);
         object.addProperty("MsgInfo","异地登录！");
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -195,7 +184,6 @@ public class MessageCode {
         object = new JsonObject();
         object.addProperty("MessageCode",1001006);
         object.addProperty("MsgInfo","重复的账户！");
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -209,47 +197,43 @@ public class MessageCode {
         object = new JsonObject();
         object.addProperty("MessageCode",1001007);
         object.addProperty("MsgInfo","账户未登录！");
-        System.out.println("MessageCode:"+object.toString());
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
     }
 
     /**
-     *
+     *导入数据格式不正确，请检查导入字段！
      * @return
      */
     public JsonObject getCode_1002001(){
         object = new JsonObject();
         object.addProperty("MessageCode",1002001);
-        object.addProperty("MsgInfo","导入数据格式不正确，或导入数据为空！");
-        System.out.println("MessageCode:"+object.toString());
+        object.addProperty("MsgInfo","导入数据格式不正确，请检查导入字段！");
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
     }
     /**
-     *
+     * 修改失败
      * @return
      */
     public JsonObject getCode_1002002(){
         object = new JsonObject();
         object.addProperty("MessageCode",1002002);
-        object.addProperty("MsgInfo","");
-        System.out.println("MessageCode:"+object.toString());
+        object.addProperty("MsgInfo","修改失败");
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
     }
     /**
-     *
+     * 无访问权限！
      * @return
      */
     public JsonObject getCode_1002003(){
         object = new JsonObject();
         object.addProperty("MessageCode",1002003);
-        object.addProperty("MsgInfo","");
-        System.out.println("MessageCode:"+object.toString());
+        object.addProperty("MsgInfo","无访问权限！");
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -267,13 +251,13 @@ public class MessageCode {
         return jsonObject;
     }
     /**
-     *
+     * 修改成功
      * @return
      */
     public JsonObject getCode_1002005(){
         object = new JsonObject();
         object.addProperty("MessageCode",1002005);
-        object.addProperty("MsgInfo","");
+        object.addProperty("MsgInfo","修改成功！");
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -285,7 +269,7 @@ public class MessageCode {
     public JsonObject getCode_1003001(){
         object = new JsonObject();
         object.addProperty("MessageCode",1003001);
-        object.addProperty("MsgInfo","");
+        object.addProperty("MsgInfo","操作失败！");
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;

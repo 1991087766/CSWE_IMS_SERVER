@@ -44,8 +44,12 @@ public class Person_information {
     @SerializedName("body")
     private JsonArray body;
 
+    @SerializedName("checkboxModel")
+    private JsonArray checkboxModel;
 
-
+    public JsonArray getCheckboxModel() {
+        return checkboxModel;
+    }
 
     public JsonObject getInformation() {
         return information;

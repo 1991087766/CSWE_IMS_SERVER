@@ -47,14 +47,15 @@ public class Information {
     @RequestMapping(value="getInformation")
     @ResponseBody
     public String InformationService(@RequestBody String data){
-        System.out.println(UnDecoder.getInstance().getUnCode(data));
         Person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
+
+
         Person_information = CurrencyInfo.getInstance().getPerson_information(UnDecoder.getInstance().getUnCode(data));
         jsonArray = Currency.getInstance().getLoginStart(Person);
         if (jsonArray.size()==1){
             if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),Person)){
                 return MessageCode.getInstance().getCode_1001000(
-                        CurrencyInfo.getInstance().getInfoList(Person_information),
+                        CurrencyInfo.getInstance().getInfoList(Person_information,gson.fromJson((JsonObject)parser.parse(UnDecoder.getInstance().getUnCode(data)),Person_information.class).getPages()),
                         CurrencyInfo.getInstance().getInfoPages(Person_information)
                 ).toString();
             }else {
@@ -67,12 +68,16 @@ public class Information {
         }
     }
 
+    /**
+     * 导入
+     * @param data
+     * @return
+     */
     @RequestMapping(value="ImportInfo")
     @ResponseBody
     public String InformationImportInfo(@RequestBody String data){
         Person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
         Person_information = CurrencyInfo.getInstance().getInformation(UnDecoder.getInstance().getUnCode(data));
-        System.out.println(Person_information.getBody());
         jsonArray = Currency.getInstance().getLoginStart(Person);
         if (jsonArray.size()==1){
             if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),Person)){
@@ -85,7 +90,6 @@ public class Information {
                             str = PIN.getData(i);
                         }
                     }
-                    System.out.println("str:"+str);
                     CurrencyInfo.getInstance().setInformation((JsonArray)parser.parse("["+str+"]"));
                     return MessageCode.getInstance().getCode_1002000().toString();
                 }else {
@@ -101,6 +105,13 @@ public class Information {
             return MessageCode.getInstance().getCode_1001007().toString();
         }
     }
+
+
+    /**
+     * 删除
+     * @param data
+     * @return
+     */
     @RequestMapping(value="delInfo")
     @ResponseBody
     public String InformationDelInfoInfo(@RequestBody String data){
@@ -112,7 +123,7 @@ public class Information {
 
                 jsonObject = (JsonObject)parser.parse(UnDecoder.getInstance().getUnCode(data));
                 deinfo = gson.fromJson(jsonObject,Person_delInfo.class);
-                if(CurrencyInfo.getInstance().delInformation(deinfo.getDelInformation())==1){
+                if(CurrencyInfo.getInstance().delInformation(deinfo.getDelInformation(),"db_customer_all","del_customer")){
                     return MessageCode.getInstance().getCode_1003000().toString();
                 }else {
                     return MessageCode.getInstance().getCode_1003001().toString();
@@ -128,18 +139,46 @@ public class Information {
         }
     }
 
+    /**
+     * 获取客服信息
+     * @param username
+     * @param access_token
+     * @return
+     */
     @RequestMapping(value="getCustomerService")
     @ResponseBody
     public String InformationCustomerService(String username,String access_token){
-        System.out.println("username:"+username);
-        System.out.println("access_token:"+access_token);
         jsonArray = Currency.getInstance().getLoginStart(username);
-        System.out.println("login:"+jsonArray);
         if (jsonArray.size()==1){
             if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),access_token)){
                 jsonArray = Currency.getInstance().getCustomerService();
-                System.out.println("info:"+jsonArray);
                 return MessageCode.getInstance().getCode_1001000(jsonArray).toString();
+            }else {
+                return MessageCode.getInstance().getCode_1001004().toString();
+            }
+        }else if (jsonArray.size()>1){
+            return MessageCode.getInstance().getCode_1001004().toString();
+        }else{
+            return MessageCode.getInstance().getCode_1001007().toString();
+        }
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping(value="ChangeSalesman")
+    @ResponseBody
+    public String InformationChangeSalesman(@RequestBody String data){
+        Person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
+        Person_information = gson.fromJson((JsonObject)parser.parse(UnDecoder.getInstance().getUnCode(data)),Person_information.class);
+        jsonArray = Currency.getInstance().getLoginStart(Person);
+        if (jsonArray.size()==1){
+            if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),Person)){
+                if(CurrencyInfo.getInstance().ChangeSalesman(Person_information)!=0){
+                    return MessageCode.getInstance().getCode_1002005().toString();
+                }else {
+                    return MessageCode.getInstance().getCode_1002002().toString();
+                }
             }else {
                 return MessageCode.getInstance().getCode_1001004().toString();
             }

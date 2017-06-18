@@ -29,7 +29,7 @@ public class loading {
         person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
         jsonArray = Currency.getInstance().getUserList(person);
         if (jsonArray.size()==1){
-            admin = jsonArray.get(0).getAsJsonObject().get("ADMIN").getAsInt();
+            admin = jsonArray.get(0).getAsJsonObject().get("管理员").getAsInt();
             jsonArray = Currency.getInstance().getLoginStart(person);
             if (jsonArray.size()==1){
                 if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),person)){
