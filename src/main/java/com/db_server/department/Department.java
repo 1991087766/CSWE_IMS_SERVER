@@ -1,12 +1,7 @@
 package com.db_server.department;
 
-import com.db_server.info.CurrencyInfo;
-import com.db_server.info.Person_Info_name;
-import com.db_server.info.Person_delInfo;
-import com.db_server.info.Person_information;
 import com.db_server.login.Currency;
 import com.db_server.login.Person_login;
-import com.db_server.login.sql_lnfo;
 import com.db_server.util.MessageCode;
 import com.db_server.util.UnDecoder;
 import com.google.gson.Gson;
@@ -33,7 +28,7 @@ public class Department {
     private Gson gson = new Gson();
     private JsonParser parser = new JsonParser();
 
-    private String str;
+    private String Id = "";
     private int admin;
 
     /**
@@ -137,6 +132,7 @@ public class Department {
 
         Person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
         person_login = gson.fromJson((JsonObject)parser.parse(UnDecoder.getInstance().getUnCode(data)),Person_login.class);
+        System.out.println(UnDecoder.getInstance().getUnCode(data));
         addAccount = CurrencyDepar.getInstance().getPerson_addAccount(UnDecoder.getInstance().getUnCode(data));
         jsonArray = Currency.getInstance().getUserList(Person);
         if(jsonArray.size()==1){
@@ -145,9 +141,11 @@ public class Department {
             if (jsonArray.size()==1){
                 if(admin==2){
                     jsonArray = CurrencyDepar.getInstance().getUserList(addAccount);
+
                     if(jsonArray.size()<1){
-                        if(CurrencyDepar.getInstance().setInfo(addAccount.getInfoData())>0
-                                && CurrencyDepar.getInstance().setDepartment(addAccount.getDeparData())>0
+                        Id += System.currentTimeMillis();
+                        if(CurrencyDepar.getInstance().setInfo(addAccount.getInfoData(Id))>0
+                                && CurrencyDepar.getInstance().setDepartment(addAccount.getDeparData(Id))>0
                                 ){
                             return MessageCode.getInstance().getCode_1002006().toString();
                         }else {

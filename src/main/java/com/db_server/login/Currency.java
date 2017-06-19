@@ -2,7 +2,6 @@ package com.db_server.login;
 
 import com.db_server.util.MessageCode;
 import com.db_server.util.MySqlUtil;
-import com.db_server.util.UnDecoder;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -169,18 +168,22 @@ public class Currency {
      * 设置登录状态
      * @param person
      */
-    public void setLoginStart(Person_login person,String IP){
+    public String setLoginStart(Person_login person, String IP){
+
+        String token = DigestUtils.md5Hex(person.getUsername()+person.getIp()+person.getAccess_token()+System.currentTimeMillis());
+
         obj = new JsonObject();
         obj.addProperty("library","db_server");
         obj.addProperty("SurfaceName","db_login");
         list_info = new ArrayList();
+        list_info.add(System.currentTimeMillis()+"");
         list_info.add(person.getUsername());
-        list_info.add(DigestUtils.md5Hex(person.getUsername()+person.getIp()+person.getAccess_token()+System.currentTimeMillis()));
+        list_info.add(token);
         list_info.add(IP);
-        list_info.add("");
-        list_info.add(System.currentTimeMillis());
+        list_info.add(null);
         obj.add("SelectValue",parser.parse(list_info.toString()));
         MySqlUtil.getInstance().sql_surface_insert(obj);
+        return token;
     }
 
 
@@ -208,44 +211,47 @@ public class Currency {
     /**
      * 登录log写入
      * @param person
-     * @param i
+     * @param admin
+     * @param start
+     * @param token
      */
-    public JsonObject setLoginLog(Person_login person, int admin , int i){
+    public JsonObject setLoginLog(Person_login person, int admin , String start,String token,String Name){
 
         obj = new JsonObject();
         obj.addProperty("library","db_server");
         obj.addProperty("SurfaceName","db_log_login");
 
-        md5 = DigestUtils.md5Hex(person.getUsername()+person.getIp()+person.getAccess_token()+System.currentTimeMillis());
-
         list_info = new ArrayList();
+        list_info.add("'"+System.currentTimeMillis()+"'");
         list_info.add(person.getUsername());
-        list_info.add(md5);
         list_info.add(person.getIp());
-        list_info.add(i);
+        list_info.add(start);
+        list_info.add(null);
         obj.add("SelectValue",parser.parse(list_info.toString()));
         MySqlUtil.getInstance().sql_surface_insert(obj);
 
-        UnDecoder.getInstance().setLoginAlter(person,md5);
 
         obj = new JsonObject();
         object = new JsonObject();
         object.addProperty("username",person.getUsername());
-        object.addProperty("access_token",md5);
+        object.addProperty("access_token",token);
         object.addProperty("admin",admin);
+        object.addProperty("Name",Name);
         obj.add("access",parser.parse(object.toString()));
         obj.add("code", MessageCode.getInstance().getCode_1001000());
         return obj;
     }
-    public void setLoginLog(Person_login person ,int i){
+    public void setLoginLog(Person_login person ,String start){
         obj = new JsonObject();
         obj.addProperty("library","db_server");
         obj.addProperty("SurfaceName","db_log_login");
         list_info = new ArrayList();
+        list_info.add("'"+System.currentTimeMillis()+"'");
         list_info.add(person.getUsername());
-        list_info.add(DigestUtils.md5Hex(person.getUsername()+person.getIp()+person.getAccess_token()+System.currentTimeMillis()));
         list_info.add(person.getIp());
-        list_info.add(i);
+        list_info.add(start);
+        list_info.add(null);
+
         obj.add("SelectValue",parser.parse(list_info.toString()));
         MySqlUtil.getInstance().sql_surface_insert(obj);
     }

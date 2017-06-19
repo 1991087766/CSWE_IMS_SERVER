@@ -51,7 +51,7 @@ public class CurrencyDepar {
     public Person_addAccount getPerson_addAccount(String json){
         obj = (JsonObject)parser.parse(json);
         addAccount= gson.fromJson(obj,Person_addAccount.class);
-        return gson.fromJson(department.getSearch(),Person_addAccount.class);
+        return gson.fromJson(addAccount.getSearch(),Person_addAccount.class);
     }
 
     public JsonArray getInfoList(Person_department department,JsonObject page){
@@ -153,7 +153,7 @@ public class CurrencyDepar {
         obj.addProperty("library","db_server");
         obj.addProperty("SurfaceName","db_info");
         obj.add("SelectValue",parser.parse(jsonArray));
-        return MySqlUtil.getInstance().sql_surface_insert_list(obj);
+        return MySqlUtil.getInstance().sql_surface_insert(obj);
     }
 
     /**
@@ -166,7 +166,7 @@ public class CurrencyDepar {
         obj.addProperty("library","db_server");
         obj.addProperty("SurfaceName","db_department");
         obj.add("SelectValue",parser.parse(jsonArray));
-        return MySqlUtil.getInstance().sql_surface_insert_list(obj);
+        return MySqlUtil.getInstance().sql_surface_insert(obj);
     }
     /**
      * 获取登录信息

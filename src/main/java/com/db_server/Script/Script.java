@@ -42,18 +42,19 @@ public class Script {
     }
 
     private void setLogin(){
+        MySqlUtil.getInstance().sql_connect("db_server");
         while (true){
             jsonArray = Currency.getInstance().getLoginInspect();
             if(jsonArray.size()>0){
                 for (int i = 0; i<jsonArray.size();i++){
                     jsonObject = jsonArray.get(i).getAsJsonObject();
-                    if(Long.parseLong(jsonObject.get("TIME").getAsString())+86399999*aLong<System.currentTimeMillis()){
+                    if(Long.parseLong(jsonObject.get("编号").getAsString())+86399999*aLong<System.currentTimeMillis()){
                         getLoginLogout(jsonObject.get("USERNAME").getAsString());
                     }
                 }
             }
             try {
-                Thread.sleep(10000);
+                Thread.sleep(60*60*1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

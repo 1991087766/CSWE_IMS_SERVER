@@ -23,6 +23,7 @@ public class login implements EmbeddedServletContainerCustomizer {
     private Person_login person;
     private JsonArray jsonArray;
     private int admin;
+    private String Name;
 
 
     public void customize(ConfigurableEmbeddedServletContainer container) {
@@ -42,19 +43,20 @@ public class login implements EmbeddedServletContainerCustomizer {
             //检查密码
             if (Currency.getInstance().getPwd(jsonArray.get(0).getAsJsonObject(),person)){
                 admin = jsonArray.get(0).getAsJsonObject().get("管理员").getAsInt();
+                Name = jsonArray.get(0).getAsJsonObject().get("姓名").getAsString();
                 //检查是否登录
                 jsonArray = Currency.getInstance().getLoginStart(person);
                 if(jsonArray.size()!=1){
                     //未登录
 //                    session.setAttribute("username",person.getUsername()+"-ip:"+UnDecoder.getInstance().getIp(request)+"-admin:"+admin);
-                    Currency.getInstance().setLoginStart(person,UnDecoder.getInstance().getIp(request));
-                    Currency.getInstance().setLoginLog(person,1);
-                    return Currency.getInstance().setLoginLog(person,admin,1).toString();
+                    String token = Currency.getInstance().setLoginStart(person,UnDecoder.getInstance().getIp(request));
+//                    Currency.getInstance().setLoginLog(person,1);
+                    return Currency.getInstance().setLoginLog(person,admin,"登录",token,Name).toString();
                 }else{
                     //已登录,检查登录token
                     if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),person)||UnDecoder.getInstance().getIp(request).equals(jsonArray.get(0).getAsJsonObject().get("IP").getAsString())){
-                        Currency.getInstance().setLoginLog(person,1);
-                        return Currency.getInstance().setLoginLog(person,admin,1).toString();
+                        Currency.getInstance().setLoginLog(person,"登录");
+                        return Currency.getInstance().setLoginLog(person,admin,"登录",jsonArray.get(0).getAsJsonObject().get("ACCESS_TOKEN").getAsString(),Name).toString();
                     }else {
                         return MessageCode.getInstance().getCode_1001005().toString();
                     }

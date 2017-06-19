@@ -33,9 +33,7 @@ public class loading {
             jsonArray = Currency.getInstance().getLoginStart(person);
             if (jsonArray.size()==1){
                 if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),person)){
-                    token = UnDecoder.getInstance().getMd5(person);
-                    UnDecoder.getInstance().setLoginAlter(person,token);
-                    return MessageCode.getInstance().getCode_1001000(jsonArray.get(0).getAsJsonObject(),token,admin).toString();
+                    return MessageCode.getInstance().getCode_1001000(jsonArray.get(0).getAsJsonObject(),jsonArray.get(0).getAsJsonObject().get("ACCESS_TOKEN").getAsString(),admin).toString();
                 }else {
                     return MessageCode.getInstance().getCode_1001004().toString();
                 }

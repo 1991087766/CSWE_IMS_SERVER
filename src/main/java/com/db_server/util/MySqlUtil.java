@@ -164,10 +164,10 @@ public class MySqlUtil {
 
         String command = "";
         int return_data = 0;
-//        System.out.println(jsonObject.toString());
+        System.out.println(jsonObject.toString());
         JsonArray jsonArray = jsonObject.get("SelectValue").getAsJsonArray();
         try {
-            sql_connect(jsonObject.get("library").getAsString());
+            
             String table = "";
             for(int i = 0; i < jsonArray.size(); i ++){
                 if (i < jsonArray.size()-1){
@@ -192,7 +192,7 @@ public class MySqlUtil {
         String table = "";
         JsonArray jsonArray = jsonObject.get("SelectValue").getAsJsonArray();
         try {
-            sql_connect(jsonObject.get("library").getAsString());
+            
             JsonArray ja;
 
             for (int list = 0;list< jsonArray.size();list++){
@@ -230,10 +230,6 @@ public class MySqlUtil {
         String WTIME = " ";
         JsonArray SelectName = jsonObject.get("SelectName").getAsJsonArray();
         JsonArray SelectValue = jsonObject.get("SelectValue").getAsJsonArray();
-
-//        System.out.println("jsonObject:"+SelectName);
-
-
         for(int i = 0;i < SelectName.size();i++){
             if(SelectName.size()>1){
                 if(i < SelectName.size()-1){
@@ -285,7 +281,7 @@ public class MySqlUtil {
 
 
         try {
-            sql_connect(jsonObject.get("library").getAsString());
+            
             if (WHERE.replaceAll(" ","").replaceAll("\t","").length()!=0){
                 WHERE = " WHERE "+WHERE;
             }
@@ -307,10 +303,6 @@ public class MySqlUtil {
         JsonArray data = new JsonArray();
         String WHERE = " ";
         String WTIME = " ";
-//        System.out.println("jsonObject:"+jsonObject.toString());
-//        System.out.println("SelectName:"+jsonObject.get("SelectName").getAsJsonArray().toString());
-//        System.out.println("SelectValue:"+jsonObject.get("SelectValue").getAsJsonArray().toString());
-
         JsonArray SelectName = jsonObject.get("SelectName").getAsJsonArray();
         JsonArray SelectValue = jsonObject.get("SelectValue").getAsJsonArray();
 
@@ -368,7 +360,7 @@ public class MySqlUtil {
 
 
         try {
-            sql_connect(jsonObject.get("library").getAsString());
+
             if (WHERE.replaceAll(" ","").replaceAll("\t","").length()!=0){
                 WHERE = " WHERE "+WHERE;
             }
@@ -384,7 +376,7 @@ public class MySqlUtil {
     public JsonArray sql_data_select(JsonObject jsonObject){
         JsonArray data = new JsonArray();
         try {
-            sql_connect(jsonObject.get("library").getAsString());
+            
             ResultSet rs = status.createStatement().executeQuery("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString());
             data = (JsonArray)parser.parse(getSqlDevicesData(rs)) ;
         } catch (SQLException e) {
@@ -395,7 +387,7 @@ public class MySqlUtil {
     public JsonArray sql_data_select_admin(JsonObject jsonObject){
         JsonArray data = new JsonArray();
         try {
-            sql_connect(jsonObject.get("library").getAsString());
+            
             ResultSet rs = status.createStatement().executeQuery(
                     "SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+" WHERE "+jsonObject.get("SelectName").getAsString()+" = "+jsonObject.get("SelectValue").getAsString()
             );
@@ -409,8 +401,8 @@ public class MySqlUtil {
         JsonArray data = new JsonArray();
         String WHERE = " ";
         try {
-            sql_connect(jsonObject.get("library").getAsString());
-//            System.out.println("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
+            
+//            System.out.println("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE+" order by ID desc");
             ResultSet rs = status.createStatement().executeQuery("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
             data = (JsonArray)parser.parse(getSqlDevicesDataLogin(rs)) ;
 //            System.out.println(data);
@@ -475,7 +467,7 @@ public class MySqlUtil {
             WHERE = WHERE;
         }
         try {
-            sql_connect(jsonObject.get("library").getAsString());
+            
             if (WHERE.replaceAll(" ","").replaceAll("\t","").length()!=0){
                 WHERE = " WHERE "+WHERE;
             }
@@ -484,6 +476,9 @@ public class MySqlUtil {
             ResultSet rs  = status.createStatement().executeQuery("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
             rs.last();
             data = rs.getRow();
+
+            rs.close();
+            
 //            System.out.println("COUNT:"+data);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -557,7 +552,7 @@ public class MySqlUtil {
 
 
         try {
-            sql_connect(jsonObject1.get("library").getAsString());
+            
 //            System.out.println("UPDATE "+jsonObject1.get("SurfaceName").getAsString()+" SET "+SET+" WHERE "+WHERE);
             return_data = status.createStatement().executeUpdate("UPDATE "+jsonObject1.get("SurfaceName").getAsString()+" SET "+SET+" WHERE "+WHERE);
 //            System.out.println("return_data:"+return_data);
@@ -579,7 +574,7 @@ public class MySqlUtil {
 
         WHERE = jsonObject.get("SelectName").getAsString()+" like '"+jsonObject.get("SelectValue").getAsString()+"' ";
         try {
-            sql_connect(jsonObject.get("library").getAsString());
+            
 //            System.out.println("DELETE FROM "+jsonObject.get("SurfaceName").getAsString()+" WHERE "+WHERE);
             return_data = status.createStatement().executeUpdate("DELETE FROM "+jsonObject.get("SurfaceName").getAsString()+" WHERE "+WHERE);
 
@@ -608,7 +603,7 @@ public class MySqlUtil {
 
 
         try {
-            sql_connect(jsonObject.get("library").getAsString());
+            
 //            System.out.println("INSERT INTO "+SurfaceNameB+" SELECT * FROM "+SurfaceNameA+" WHERE "+WHERE);
             return_data = status.prepareStatement("INSERT INTO "+SurfaceNameB+" SELECT * FROM "+SurfaceNameA+" WHERE "+WHERE).executeUpdate();
 //            System.out.println("DELETE FROM "+SurfaceNameB+" WHERE "+WHERE);
@@ -656,14 +651,16 @@ public class MySqlUtil {
 
 
     public String getSqlDevicesData(ResultSet rs, int select,int Request,int each_page){
+
         String data = "[";
         int i = 0;
         int No = 0;
         try {
+            rs.afterLast();
             switch (select) {
                 case 0:
                     try {
-                        while (rs.next()){
+                        while (rs.previous()){
                             data = data+"{" +
                                     "value:"+rs.getInt(1)+"}";
                         }
@@ -674,7 +671,7 @@ public class MySqlUtil {
                     break;
                 case 1:
                     try {
-                        while (rs.next()){
+                        while (rs.previous()){
                             data = data+"{" +
                                     "value:"+rs.getString(1)+"}";
                         }
@@ -685,7 +682,7 @@ public class MySqlUtil {
                     break;
                 case 2:
                     try{
-                        while (rs.next()) {
+                        while (rs.previous()) {
 
                             if(i>=1){
                                 data=data+",";
@@ -696,15 +693,12 @@ public class MySqlUtil {
                                     "\"账号\":\""+rs.getString(2)+"\"," +
                                     "\"密码\":\""+rs.getString(3)+"\"," +
                                     "\"性别\":\""+rs.getString(4)+"\"," +
-                                    "\"混编\":\""+rs.getString(5)+"\"," +
-                                    "\"部门\":\""+rs.getString(6)+"\"," +
-                                    "\"地址\":\""+rs.getString(7)+"\"," +
-                                    "\"手机\":\""+rs.getString(8)+"\"," +
-                                    "\"邮件\":\""+rs.getString(9)+"\"," +
-                                    "\"头像\":\""+rs.getString(10)+"\"," +
-                                    "\"管理员\":"+rs.getInt(11)+","+
-                                    "\"姓名\":\""+rs.getString(12)+"\"," +
-                                    "\"更新时间\":\""+rs.getString(13) +
+                                    "\"部门\":\""+rs.getString(5)+"\"," +
+                                    "\"地址\":\""+rs.getString(6)+"\"," +
+                                    "\"手机\":\""+rs.getString(7)+"\"," +
+                                    "\"邮件\":\""+rs.getString(8)+"\"," +
+                                    "\"管理员\":"+rs.getInt(9)+","+
+                                    "\"姓名\":\""+rs.getString(10) +
                                     "\"}";
                             i++;
                         }
@@ -716,17 +710,17 @@ public class MySqlUtil {
                 case 3:
 
                     try{
-                        while (rs.next()) {
+                        while (rs.previous()) {
                             if(i>=1){
                                 data=data+",";
                             }
                             if (i>= each_page*(Request-1)&&i<each_page*Request-1)
                             data = data+"{" +
-                                    "\"USERNAME\":\""+rs.getString(1)+"\"," +
-                                    "\"ACCESS_TOKEN\":\""+rs.getString(2)+"\"," +
-                                    "\"IP\":\""+rs.getString(3)+"\"," +
-                                    "\"ADDRESS\":\""+rs.getString(4)+"\"," +
-                                    "\"TIME\":\""+rs.getString(5)+"\"}";
+
+                                    "\"编号\":\""+rs.getString(1)+"\"," +
+                                    "\"USERNAME\":\""+rs.getString(2)+"\"," +
+                                    "\"ACCESS_TOKEN\":\""+rs.getString(3)+"\"," +
+                                    "\"IP\":\""+rs.getString(4)+"\"}";
                             i++;
                         }
                     }catch (Exception e){
@@ -736,20 +730,19 @@ public class MySqlUtil {
                     break;
                 case 4:
                     try{
-                        while (rs.next()) {
+                        while (rs.previous()) {
 
                             if (i>= each_page*(Request-1)&&i<each_page*Request-1){
                                 if(i>each_page*(Request-1)){
                                     data=data+",";
                                 }
                                 data = data+"{" +
-                                        "\"ID\":\""+rs.getString(1)+"\"," +
-                                        "\"DT\":\""+rs.getString(2)+"\"," +
-                                        "\"USERNAME\":\""+rs.getString(3)+"\"," +
-                                        "\"DEPARTMENT\":\""+rs.getString(4)+"\"," +
-                                        "\"ADDRESS\":\""+rs.getString(5)+"\"," +
+                                        "\"编号\":\""+rs.getString(1)+"\"," +
+                                        "\"账号\":\""+rs.getString(3)+"\"," +
+                                        "\"部门\":\""+rs.getString(4)+"\"," +
                                         "\"IP\":\""+rs.getString(6)+"\"," +
-                                        "\"CHECK\":\""+rs.getString(7) +
+                                        "\"时间\":\""+rs.getString(3)+"\"," +
+                                        "\"操作\":\""+rs.getString(7) +
                                         "\"}";
                             }
 
@@ -763,18 +756,16 @@ public class MySqlUtil {
                     break;
                 case 5:
                     try{
-                        while (rs.next()) {
+                        while (rs.previous()) {
                             if (i>= each_page*(Request-1)&&i<each_page*Request-1) {
                                 if (i > each_page * (Request - 1)) {
                                     data = data + ",";
                                 }
                                 data = data + "{" +
-                                        "\"ID\":\"" + rs.getString(1) + "\"," +
-                                        "\"DT\":\"" + rs.getString(2) + "\"," +
-                                        "\"USERNAME\":\"" + rs.getString(3) + "\"," +
-                                        "\"DEPARTMENT\":\"" + rs.getString(4) + "\"," +
-                                        "\"ADDRESS\":\"" + rs.getString(5) + "\"," +
-                                        "\"IP\":\"" + rs.getString(6) +
+                                        "\"编号\":\"" + rs.getString(1) + "\"," +
+                                        "\"账号\":\"" + rs.getString(2) + "\"," +
+                                        "\"IP\":\"" + rs.getString(3) + "\"," +
+                                        "\"状态\":\"" + rs.getString(4) +
                                         "\"}";
                             }
                             i++;
@@ -786,7 +777,7 @@ public class MySqlUtil {
                     break;
                 case 6:
                     try{
-                        while (rs.next()) {
+                        while (rs.previous()) {
                             if (i>= each_page*(Request-1)&&i<each_page*Request-1){
                                 if(i>each_page*(Request-1)){
                                     data=data+",";
@@ -808,7 +799,7 @@ public class MySqlUtil {
                     break;
                 case 7:
                     try{
-                        while (rs.next()) {
+                        while (rs.previous()) {
 
                             if (i>= each_page*(Request-1)&&i<each_page*Request){
                                 if(i>each_page*(Request-1)){
@@ -853,7 +844,7 @@ public class MySqlUtil {
                     break;
                 case 11:
                     try{
-                        while (rs.next()) {
+                        while (rs.previous()) {
 
                             if (i>= each_page*(Request-1)&&i<each_page*Request){
                                 if(i>each_page*(Request-1)){
@@ -887,7 +878,7 @@ public class MySqlUtil {
 
             data=data+"]";
             rs.close();
-            sql_close();
+            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -898,11 +889,12 @@ public class MySqlUtil {
         int i = 0;
         try {
             try{
-                while (rs.next()) {
+                rs.afterLast();
+                while (rs.previous()) {
                     if(i>=1){
                         data=data+",";
                     }
-                    data = data+rs.getString(12);
+                    data = data+rs.getString(10);
 
                     i++;
                 }
@@ -915,13 +907,14 @@ public class MySqlUtil {
             data=data+"]";
 
             rs.close();
-            sql_close();
+            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return data;
     }
     public String getSqlDevicesDataLogin(ResultSet rs){
+
         String data = "[";
         int i = 0;
         try {
@@ -932,11 +925,10 @@ public class MySqlUtil {
                         data=data+",";
                     }
                     data = data+"{" +
-                            "\"USERNAME\":\""+rs.getString(1)+"\"," +
-                            "\"ACCESS_TOKEN\":\""+rs.getString(2)+"\"," +
-                            "\"IP\":\""+rs.getString(3)+"\"," +
-                            "\"ADDRESS\":\""+rs.getString(4)+"\"," +
-                            "\"TIME\":\""+rs.getString(5)+"\"}";
+                            "\"编号\":\""+rs.getString(1)+"\"," +
+                            "\"USERNAME\":\""+rs.getString(2)+"\"," +
+                            "\"ACCESS_TOKEN\":\""+rs.getString(3)+"\"," +
+                            "\"IP\":\""+rs.getString(4)+"\"}";
 
 
                     i++;
@@ -950,7 +942,7 @@ public class MySqlUtil {
             data=data+"]";
 
             rs.close();
-            sql_close();
+            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -1001,7 +993,7 @@ public class MySqlUtil {
 //        String[] data = {"'id2'","'name123'","'pwd123'","123","'num123'","'dep123'","'add123'","'phone123'","'mail123'","'icon123'"};
 //        MySqlUtil.getInstance().sql_connect();
 //        MySqlUtil.getInstance().sql_create_databases("QA_SPMS");
-//        MySqlUtil.getInstance().sql_close();
+//        MySqlUtil.getInstance().
 //        MySqlUtil.getInstance().sql_connect("QA_SPMS");
 //        MySqlUtil.getInstance().sql_surface_insert("01_userinfo","info",data);
 
@@ -1015,7 +1007,7 @@ public class MySqlUtil {
 //        System.out.println(a);
 //        int b = Integer.parseInt(a.substring(a.indexOf("return:")+7,a.indexOf("}")));
 //        MySqlUtil.getInstance().sql_data_alter("QRCODE_COUNT","qrcode_add",b+1);
-//        MySqlUtil.getInstance().sql_close();
+//        MySqlUtil.getInstance().
 //        MySqlUtil.getInstance().sql_data_alter_autoadd("QRCODE_COUNT","'qrcode_add'","COUNT");
 
     }

@@ -195,6 +195,6 @@ public class Person_Info_name {
 
     public String getData(int i){
 
-        return "["+getT(i)+getA()+getB()+getC()+getD()+getE()+getF()+getG()+getH()+getI()+getJ()+getK()+getL()+getM()+getN()+getO()+getP()+getQ()+getR()+getS()+getU()+"]";
+        return "["+getT(i)+getA()+getB()+getC()+getD()+getE()+getF()+getG()+getH()+getI()+getJ()+getK()+getL()+getM()+getN()+getO()+getP()+getQ()+getR()+getS()+getU()+","+null+"]";
     }
 }

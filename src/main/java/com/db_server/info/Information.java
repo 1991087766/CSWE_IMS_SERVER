@@ -48,10 +48,9 @@ public class Information {
     @ResponseBody
     public String InformationService(@RequestBody String data){
         Person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
-
-
         Person_information = CurrencyInfo.getInstance().getPerson_information(UnDecoder.getInstance().getUnCode(data));
         jsonArray = Currency.getInstance().getLoginStart(Person);
+        System.out.println("登录："+jsonArray);
         if (jsonArray.size()==1){
             if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),Person)){
                 return MessageCode.getInstance().getCode_1001000(

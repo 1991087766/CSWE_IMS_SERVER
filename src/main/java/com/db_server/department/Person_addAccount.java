@@ -2,6 +2,10 @@ package com.db_server.department;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import org.apache.commons.codec.digest.DigestUtils;
+import sun.security.provider.MD5;
+
+import java.util.Random;
 
 /**
  * Created by xc on 2017/6/19.
@@ -15,6 +19,8 @@ public class Person_addAccount {
 
     @SerializedName("Username")
     private String Username;
+
+    private String Pwd;
 
     @SerializedName("Name")
     private String Name;
@@ -46,11 +52,27 @@ public class Person_addAccount {
         return search;
     }
 
-    public void setId() {
-        this.Id = System.currentTimeMillis();
+
+    public void setPwd(){
+        this.Pwd = getRandomString(8);
     }
-    public long getId() {
-        return Id;
+
+    public String getPwd8(){
+        return Pwd;
+    }
+    public String getPwd32(){
+        return DigestUtils.md5Hex(getUsername()+getPwd8());
+    }
+
+    public static String getRandomString(int length) { //length表示生成字符串的长度
+        String base = "ABCDEFGHIGKLMNOPQRSTUVW0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(base.length());
+            sb.append(base.charAt(number));
+        }
+        return sb.toString();
     }
 
     public String getUsername() {
@@ -89,18 +111,13 @@ public class Person_addAccount {
         return Leader;
     }
 
-    public String getInfoData(){
-        setId();
-        return "["+getId()+","+getUsername()+","+getName()
-                +","+getGender()+","+getDepartment()+","
-                +getAddress()+","+getPhone()+","+getMail()
-                +getAdmin()+","+getLeader()+"]";
+    public String getInfoData(String ID){
+        setPwd();
+        return "['"+ID+"','"+getUsername()+"','"+getPwd32()+"','"+getGender()+"','"+getDepartment()+"','"+getAddress()+"','"+getPhone()+"','"+getMail()+"',"+getAdmin()+",'"+getName()+"',"+null+"]";
     }
-    public String getDeparData(){
-        return "["+getId()+","+getUsername()+","+getName()
-                +","+getGender()+","+getDepartment()+","
-                +getAddress()+","+getPhone()+","+getMail()
-                +getAdmin()+","+getLeader()+"]";
+    public String getDeparData(String ID){
+
+        return "['"+ID+"','"+getName()+"','"+getDepartment()+"','"+getLeader()+"','在职','"+ID+"','—'"+",'"+getAddress()+"',"+null+"]";
     }
 
 }
