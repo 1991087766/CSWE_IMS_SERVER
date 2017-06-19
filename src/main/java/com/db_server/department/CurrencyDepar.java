@@ -1,6 +1,5 @@
 package com.db_server.department;
 
-import com.db_server.info.Person_information;
 import com.db_server.util.MySqlUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -20,6 +19,7 @@ public class CurrencyDepar {
     private JsonObject jsonObject;
     private Gson gson = new Gson();
     private Person_department department;
+    private Person_addAccount addAccount;
 
     private List list_info;
     private List list_title;
@@ -46,6 +46,12 @@ public class CurrencyDepar {
         obj = (JsonObject)parser.parse(json);
         department= gson.fromJson(obj,Person_department.class);
         return gson.fromJson(department.getSearch(),Person_department.class);
+    }
+
+    public Person_addAccount getPerson_addAccount(String json){
+        obj = (JsonObject)parser.parse(json);
+        addAccount= gson.fromJson(obj,Person_addAccount.class);
+        return gson.fromJson(department.getSearch(),Person_addAccount.class);
     }
 
     public JsonArray getInfoList(Person_department department,JsonObject page){
@@ -82,7 +88,7 @@ public class CurrencyDepar {
 
 
     /**
-     * 修改
+     * 修改部门
      * @param Person_department
      * @return
      */
@@ -109,6 +115,11 @@ public class CurrencyDepar {
 
     }
 
+    /**
+     * 修改管理
+     * @param Person_department
+     * @return
+     */
     public int SetAdministration(Person_department Person_department){
 
 
@@ -132,5 +143,46 @@ public class CurrencyDepar {
         }
     }
 
+
+    /**
+     * 添加账户
+     * @param jsonArray
+     */
+    public int setInfo(String jsonArray){
+        obj = new JsonObject();
+        obj.addProperty("library","db_server");
+        obj.addProperty("SurfaceName","db_info");
+        obj.add("SelectValue",parser.parse(jsonArray));
+        return MySqlUtil.getInstance().sql_surface_insert_list(obj);
+    }
+
+    /**
+     * 添加部门信息
+     * @param jsonArray
+     * @return
+     */
+    public int setDepartment(String jsonArray){
+        obj = new JsonObject();
+        obj.addProperty("library","db_server");
+        obj.addProperty("SurfaceName","db_department");
+        obj.add("SelectValue",parser.parse(jsonArray));
+        return MySqlUtil.getInstance().sql_surface_insert_list(obj);
+    }
+    /**
+     * 获取登录信息
+     * @param person
+     * @return
+     */
+    public JsonArray getUserList(Person_addAccount person){
+        obj = new JsonObject();
+        obj.addProperty("library","db_server");
+        obj.addProperty("SurfaceName","db_info");
+        obj.add("SelectName", parser.parse("['账号']"));
+        list_info = new ArrayList();
+        list_info.add(person.getUsername());
+        obj.add("SelectValue",parser.parse(list_info.toString()));
+        JsonArray jsonArray = MySqlUtil.getInstance().sql_data_select(obj,"LIKE","OR");
+        return jsonArray;
+    }
 
 }

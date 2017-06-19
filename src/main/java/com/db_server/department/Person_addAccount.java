@@ -10,6 +10,9 @@ public class Person_addAccount {
     @SerializedName("search")
     private JsonObject search;
 
+    @SerializedName("Id")
+    private long Id;
+
     @SerializedName("Username")
     private String Username;
 
@@ -43,8 +46,11 @@ public class Person_addAccount {
         return search;
     }
 
+    public void setId() {
+        this.Id = System.currentTimeMillis();
+    }
     public long getId() {
-        return System.currentTimeMillis();
+        return Id;
     }
 
     public String getUsername() {
@@ -83,7 +89,14 @@ public class Person_addAccount {
         return Leader;
     }
 
-    public String getData(){
+    public String getInfoData(){
+        setId();
+        return "["+getId()+","+getUsername()+","+getName()
+                +","+getGender()+","+getDepartment()+","
+                +getAddress()+","+getPhone()+","+getMail()
+                +getAdmin()+","+getLeader()+"]";
+    }
+    public String getDeparData(){
         return "["+getId()+","+getUsername()+","+getName()
                 +","+getGender()+","+getDepartment()+","
                 +getAddress()+","+getPhone()+","+getMail()

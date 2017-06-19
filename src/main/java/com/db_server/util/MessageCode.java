@@ -177,13 +177,13 @@ public class MessageCode {
         return jsonObject;
     }
     /**
-     * 重复的账户
+     * 账号已存在
      * @return
      */
     public JsonObject getCode_1001006(){
         object = new JsonObject();
         object.addProperty("MessageCode",1001006);
-        object.addProperty("MsgInfo","重复的账户！");
+        object.addProperty("MsgInfo","账号已存在！");
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;

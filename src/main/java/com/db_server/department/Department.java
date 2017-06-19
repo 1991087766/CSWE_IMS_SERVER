@@ -28,6 +28,7 @@ public class Department {
     private Person_login Person;
     private Person_login person_login;
     private Person_department department;
+    private Person_addAccount addAccount;
     private JsonArray jsonArray;
     private Gson gson = new Gson();
     private JsonParser parser = new JsonParser();
@@ -130,23 +131,30 @@ public class Department {
     }
 
 
-    @RequestMapping(value="setDepartment")
+    @RequestMapping(value="addAccount")
     @ResponseBody
     public String AddAccount(@RequestBody String data){
 
         Person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
         person_login = gson.fromJson((JsonObject)parser.parse(UnDecoder.getInstance().getUnCode(data)),Person_login.class);
-        department = CurrencyDepar.getInstance().getPerson_department(UnDecoder.getInstance().getUnCode(data));
+        addAccount = CurrencyDepar.getInstance().getPerson_addAccount(UnDecoder.getInstance().getUnCode(data));
         jsonArray = Currency.getInstance().getUserList(Person);
         if(jsonArray.size()==1){
             admin = jsonArray.get(0).getAsJsonObject().get("管理员").getAsInt();
             jsonArray = Currency.getInstance().getLoginStart(Person);
             if (jsonArray.size()==1){
                 if(admin==2){
-                    if(admin==2){
-                        return MessageCode.getInstance().getCode_1002006().toString();
+                    jsonArray = CurrencyDepar.getInstance().getUserList(addAccount);
+                    if(jsonArray.size()<1){
+                        if(CurrencyDepar.getInstance().setInfo(addAccount.getInfoData())>0
+                                && CurrencyDepar.getInstance().setDepartment(addAccount.getDeparData())>0
+                                ){
+                            return MessageCode.getInstance().getCode_1002006().toString();
+                        }else {
+                            return MessageCode.getInstance().getCode_1002002().toString();
+                        }
                     }else {
-                        return MessageCode.getInstance().getCode_1002002().toString();
+                        return MessageCode.getInstance().getCode_1001006().toString();
                     }
                 }else {
                     return MessageCode.getInstance().getCode_1002003().toString();
