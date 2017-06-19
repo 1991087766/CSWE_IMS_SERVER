@@ -262,6 +262,19 @@ public class MessageCode {
         jsonObject.add("code", object);
         return jsonObject;
     }
+
+    /**
+     * 添加成功
+     * @return
+     */
+    public JsonObject getCode_1002006(){
+        object = new JsonObject();
+        object.addProperty("MessageCode",1002006);
+        object.addProperty("MsgInfo","添加成功！");
+        jsonObject = new JsonObject();
+        jsonObject.add("code", object);
+        return jsonObject;
+    }
     /**
      *
      * @return

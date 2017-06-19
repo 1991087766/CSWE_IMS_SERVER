@@ -129,4 +129,37 @@ public class Department {
         }
     }
 
+
+    @RequestMapping(value="setDepartment")
+    @ResponseBody
+    public String AddAccount(@RequestBody String data){
+
+        Person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
+        person_login = gson.fromJson((JsonObject)parser.parse(UnDecoder.getInstance().getUnCode(data)),Person_login.class);
+        department = CurrencyDepar.getInstance().getPerson_department(UnDecoder.getInstance().getUnCode(data));
+        jsonArray = Currency.getInstance().getUserList(Person);
+        if(jsonArray.size()==1){
+            admin = jsonArray.get(0).getAsJsonObject().get("管理员").getAsInt();
+            jsonArray = Currency.getInstance().getLoginStart(Person);
+            if (jsonArray.size()==1){
+                if(admin==2){
+                    if(admin==2){
+                        return MessageCode.getInstance().getCode_1002006().toString();
+                    }else {
+                        return MessageCode.getInstance().getCode_1002002().toString();
+                    }
+                }else {
+                    return MessageCode.getInstance().getCode_1002003().toString();
+                }
+            }else if (jsonArray.size()>1){
+                return MessageCode.getInstance().getCode_1001004().toString();
+            }else{
+                return MessageCode.getInstance().getCode_1001007().toString();
+            }
+        }else {
+            return MessageCode.getInstance().getCode_1001002().toString();
+        }
+    }
+
+
 }
