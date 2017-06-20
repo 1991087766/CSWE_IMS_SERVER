@@ -818,7 +818,7 @@ public class MySqlUtil {
                                         "\"固定电话\":\""+rs.getString(8)+"\"," +
                                         "\"手机\":\""+rs.getString(9)+"\"," +
                                         "\"身份证号\":\""+rs.getString(10)+"\"," +
-                                        "\"车座位\":"+rs.getInt(11)+"," +
+                                        "\"座位数\":"+rs.getInt(11)+"," +
                                         "\"商业险日期\":"+rs.getLong(12)+"," +
                                         "\"交强险日期\":"+rs.getLong(13)+"," +
                                         "\"登记日期\":"+rs.getLong(14)+"," +
@@ -828,7 +828,9 @@ public class MySqlUtil {
                                         "\"汽车价格\":\""+rs.getString(18)+"\","+
                                         "\"初保\":\""+rs.getString(19)+"\","+
                                         "\"客服\":\""+rs.getString(20)+"\","+
-                                        "\"更新时间\":\""+rs.getString(21)+
+                                        "\"更新时间\":\""+rs.getString(21)+"\","+
+                                        "\"投保公司\":\""+rs.getString(22)+"\","+
+                                        "\"客户类型\":\""+rs.getString(23)+
                                         "\"}";
                             }
 

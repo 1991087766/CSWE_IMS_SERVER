@@ -46,7 +46,7 @@ public class Person_Info_name {
     private String i = null;
 
     @SerializedName("车座位数")
-    private int j = 0;
+    private int j = 4;
 
     @SerializedName("商业险日期")
     private String k = null;
@@ -64,7 +64,7 @@ public class Person_Info_name {
     private String o = null;
 
     @SerializedName("是否初保")
-    private String p = null;
+    private String p = "无";
 
     @SerializedName("客服工号")
     private String q = null;
@@ -80,6 +80,12 @@ public class Person_Info_name {
 
     @SerializedName("更新时间")
     private String u = "";
+
+    @SerializedName("投保公司")
+    private String v = "";
+
+    @SerializedName("客户类型")
+    private String w = "";
 
     private String getA() {
         return "'"+a+"',";
@@ -118,7 +124,11 @@ public class Person_Info_name {
     }
 
     private String getJ() {
-        return j+",";
+        if (j!=0){
+            return j+",";
+        }else {
+            return 4+",";
+        }
     }
 
     private String getK() {
@@ -163,7 +173,15 @@ public class Person_Info_name {
 
 
     private String getU() {
-        return "'"+System.currentTimeMillis()+"'";
+        return "'"+System.currentTimeMillis()+"',";
+    }
+
+    public String getV() {
+            return "'无',";
+    }
+
+    public String getW() {
+            return "'无'";
     }
 
     private long dateToStamp(String s)  {
@@ -195,6 +213,6 @@ public class Person_Info_name {
 
     public String getData(int i){
 
-        return "["+getT(i)+getA()+getB()+getC()+getD()+getE()+getF()+getG()+getH()+getI()+getJ()+getK()+getL()+getM()+getN()+getO()+getP()+getQ()+getR()+getS()+getU()+","+null+"]";
+        return "["+getT(i)+getA()+getB()+getC()+getD()+getE()+getF()+getG()+getH()+getI()+getJ()+getK()+getL()+getM()+getN()+getO()+getP()+getQ()+getR()+getS()+getU()+getV()+getW()+"]";
     }
 }
