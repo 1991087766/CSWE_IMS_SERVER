@@ -55,19 +55,21 @@ public class CurrencyDepar {
     }
 
     public JsonArray getInfoList(Person_department department,JsonObject page){
-        return MySqlUtil.getInstance().sql_data_select(setSelectInfo(department),"LIKE","OR",page);
+        return MySqlUtil.getInstance().sql_data_select(setSelectInfo(department),"LIKE","OR",page,11);
     }
 
     public JsonObject setSelectInfo(Person_department department){
         obj = new JsonObject();
         obj.addProperty("library","db_server");
-        obj.addProperty("SurfaceName","db_department");
+        obj.addProperty("SurfaceName","db_info");
         list_title = new ArrayList();
         list_info = new ArrayList();
         if (department.getSearchInfo()!=null&&department.getSearchInfo().replaceAll(" ","").length()!=0){
+            list_title.add("管理");
             list_title.add("姓名");
             list_title.add("部门");
             list_title.add("管理");
+            list_info.add("%"+department.getSearchInfo()+"%");
             list_info.add("%"+department.getSearchInfo()+"%");
             list_info.add("%"+department.getSearchInfo()+"%");
             list_info.add("%"+department.getSearchInfo()+"%");
@@ -97,7 +99,7 @@ public class CurrencyDepar {
         if (Person_department.getSetDepartment().length()>1){
             obj = new JsonObject();
             obj.addProperty("library","db_server");
-            obj.addProperty("SurfaceName","db_department");
+            obj.addProperty("SurfaceName","db_info");
 
 
             list_info = new ArrayList();
@@ -126,7 +128,7 @@ public class CurrencyDepar {
         if (Person_department.getSetAdministration().length()>1){
             obj = new JsonObject();
             obj.addProperty("library","db_server");
-            obj.addProperty("SurfaceName","db_department");
+            obj.addProperty("SurfaceName","db_info");
 
 
             list_info = new ArrayList();
@@ -164,7 +166,7 @@ public class CurrencyDepar {
     public int setDepartment(String jsonArray){
         obj = new JsonObject();
         obj.addProperty("library","db_server");
-        obj.addProperty("SurfaceName","db_department");
+        obj.addProperty("SurfaceName","db_info");
         obj.add("SelectValue",parser.parse(jsonArray));
         return MySqlUtil.getInstance().sql_surface_insert(obj);
     }

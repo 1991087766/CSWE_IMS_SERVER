@@ -299,6 +299,81 @@ public class MySqlUtil {
         }
         return data;
     }
+    public JsonArray sql_data_select(JsonObject jsonObject,String nexus1,String nexus2,JsonObject pages,int sql){
+        JsonArray data = new JsonArray();
+        String WHERE = " ";
+        String WTIME = " ";
+        JsonArray SelectName = jsonObject.get("SelectName").getAsJsonArray();
+        JsonArray SelectValue = jsonObject.get("SelectValue").getAsJsonArray();
+        for(int i = 0;i < SelectName.size();i++){
+            if(SelectName.size()>1){
+                if(i < SelectName.size()-1){
+                    WHERE += SelectName.get(i).getAsString()+" "+nexus1+" '"+SelectValue.get(i).getAsString()+"' "+nexus2+" ";
+                }else{
+                    WHERE += SelectName.get(i).getAsString()+" "+nexus1+" '"+SelectValue.get(i).getAsString()+"' ";
+                }
+            }else{
+                WHERE += SelectName.get(i).getAsString()+" "+nexus1+" '"+SelectValue.get(i).getAsString()+"' ";
+            }
+        }
+//        System.out.println("WHERE:"+WHERE);
+        try {
+
+            JsonArray SelectValueCOMMERCIAL = jsonObject.get("SelectValueCOMMERCIAL").getAsJsonArray();
+            WTIME += " ( 商业险日期 >= "+SelectValueCOMMERCIAL.get(0).getAsInt()+" AND 商业险日期 <= "+SelectValueCOMMERCIAL.get(1).getAsInt()+") ";
+        }catch (Exception r){
+
+        }
+
+        try {
+            JsonArray SelectValueCOMPULSORY= jsonObject.get("SelectValueCOMPULSORY").getAsJsonArray();
+            WTIME += "AND (交强险日期 >= "+SelectValueCOMPULSORY.get(0).getAsInt()+" AND 交强险日期 <= "+SelectValueCOMPULSORY.get(1).getAsInt()+") ";
+        }catch (Exception r){
+
+        }
+        try {
+            JsonArray SelectValueREGISTER= jsonObject.get("SelectValueREGISTER").getAsJsonArray();
+            WTIME += "AND (登记日期 >= "+SelectValueREGISTER.get(0).getAsInt()+" AND 登记日期 <= "+SelectValueREGISTER.get(1).getAsInt()+") ";
+        }catch (Exception r){
+
+        }
+        try {
+
+            if (jsonObject.get("Binding").getAsBoolean()){
+                WTIME = "("+WTIME+") AND "+" 客服 = '客服'";
+            }
+
+        }catch (Exception r){
+
+        }
+        if(WHERE.replaceAll(" ","").length()>3 && WTIME.replaceAll(" ","").length()>3){
+            WHERE = "("+WHERE+") AND "+WTIME;
+        }else if (WTIME.replaceAll(" ","").length()>3){
+            WHERE = WTIME;
+        }else {
+            WHERE = WHERE;
+        }
+
+
+        try {
+
+            if (WHERE.replaceAll(" ","").replaceAll("\t","").length()!=0){
+                WHERE = " WHERE "+WHERE;
+            }
+//            System.out.println("SELECT:"+"SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
+
+            ResultSet rs = status.createStatement().executeQuery("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
+            try {
+//                System.out.println("pages:"+pages.toString());
+                data = (JsonArray)parser.parse(getSqlDevicesData(rs,sql,pages.get("Request").getAsInt(),pages.get("each_page").getAsInt())) ;
+            }catch (Exception e){
+                data = (JsonArray)parser.parse(getSqlDevicesData(rs,sql,1,20)) ;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return data;
+    }
     public JsonArray sql_data_select(JsonObject jsonObject,String nexus1,String nexus2){
         JsonArray data = new JsonArray();
         String WHERE = " ";
@@ -563,6 +638,51 @@ public class MySqlUtil {
     }
 
     /**
+     * 修改数据
+     * @param jsonObject1
+     * @return
+     */
+    public int sql_data_alter(String SelectValue,JsonObject jsonObject1){
+        int return_data = 0;
+        String SET = "";
+        String WHERE = " 编号 = "+SelectValue;
+        for(int i = 0; i<jsonObject1.get("ColumnName").getAsJsonArray().size();i++){
+            if(jsonObject1.get("ColumnName").getAsJsonArray().size()>1){
+                if(i < jsonObject1.get("ColumnName").getAsJsonArray().size()-1){
+                    try {
+                        SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"="+jsonObject1.get("Value").getAsJsonArray().get(i).getAsInt()+",";
+                    }catch (Exception e){
+                        SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"',";
+                    }
+                }else{
+                    try {
+                        SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"="+jsonObject1.get("Value").getAsJsonArray().get(i).getAsInt();
+                    }catch (Exception e){
+                        SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"'";
+                    }
+                }
+            }else{
+                try {
+                    SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"="+jsonObject1.get("Value").getAsJsonArray().get(i).getAsInt();
+                }catch (Exception e){
+                    SET += jsonObject1.get("ColumnName").getAsJsonArray().get(i).getAsString()+"='"+jsonObject1.get("Value").getAsJsonArray().get(i).getAsString()+"'";
+                }
+            }
+        }
+
+
+        try {
+
+//            System.out.println("UPDATE "+jsonObject1.get("SurfaceName").getAsString()+" SET "+SET+" WHERE "+WHERE);
+            return_data = status.createStatement().executeUpdate("UPDATE "+jsonObject1.get("SurfaceName").getAsString()+" SET "+SET+" WHERE "+WHERE);
+//            System.out.println("return_data:"+return_data);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return return_data ;
+    }
+
+    /**
      * 删除表内数据
      * Value  UNIX时间戳，是文件名
      * @return
@@ -698,7 +818,11 @@ public class MySqlUtil {
                                     "\"手机\":\""+rs.getString(7)+"\"," +
                                     "\"邮件\":\""+rs.getString(8)+"\"," +
                                     "\"管理员\":"+rs.getInt(9)+","+
-                                    "\"姓名\":\""+rs.getString(10) +
+                                    "\"姓名\":\""+rs.getString(10)+"\"," +
+                                    "\"领导\":\""+rs.getString(11)+"\"," +
+                                    "\"状态\":\""+rs.getString(12)+"\"," +
+                                    "\"入职时间\":\""+rs.getString(13)+"\"," +
+                                    "\"离职时间\":\""+rs.getString(14) +
                                     "\"}";
                             i++;
                         }
@@ -856,13 +980,16 @@ public class MySqlUtil {
                                 data = data+"{" +
                                         "\"No.\":"+No+"," +
                                         "\"编号\":\""+rs.getString(1)+"\"," +
-                                        "\"姓名\":\""+rs.getString(2)+"\"," +
-                                        "\"部门\":\""+rs.getString(3)+"\"," +
-                                        "\"管理\":\""+rs.getString(4)+"\"," +
-                                        "\"状态\":\""+rs.getString(5)+"\"," +
-                                        "\"入职时间\":\""+rs.getString(6)+"\"," +
-                                        "\"离职时间\":\""+rs.getString(7)+"\"," +
-                                        "\"地址\":\""+rs.getString(8)+
+                                        "\"账号\":\""+rs.getString(2)+"\"," +
+                                        "\"姓名\":\""+rs.getString(10)+"\"," +
+                                        "\"手机\":\""+rs.getString(7)+"\"," +
+                                        "\"邮件\":\""+rs.getString(8)+"\"," +
+                                        "\"部门\":\""+rs.getString(5)+"\"," +
+                                        "\"管理\":\""+rs.getString(11)+"\"," +
+                                        "\"状态\":\""+rs.getString(12)+"\"," +
+                                        "\"入职时间\":\""+rs.getString(13)+"\"," +
+                                        "\"离职时间\":\""+rs.getString(14)+"\"," +
+                                        "\"地址\":\""+rs.getString(6)+
                                         "\"}";
                             }
 

@@ -28,6 +28,7 @@ public class Information {
     private Person_login Person;
     private sql_lnfo sql_lnfo;
     private Person_information Person_information;
+    private Person_AfterCustomer Person_AfterCustomer;
     private Person_delInfo deinfo;
     private Person_Info_name PIN;
     private JsonArray jsonArray;
@@ -163,7 +164,7 @@ public class Information {
     }
 
     /**
-     * 修改
+     * 修改客服
      */
     @RequestMapping(value="ChangeSalesman")
     @ResponseBody
@@ -174,6 +175,58 @@ public class Information {
         if (jsonArray.size()==1){
             if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),Person)){
                 if(CurrencyInfo.getInstance().ChangeSalesman(Person_information)!=0){
+                    return MessageCode.getInstance().getCode_1002005().toString();
+                }else {
+                    return MessageCode.getInstance().getCode_1002002().toString();
+                }
+            }else {
+                return MessageCode.getInstance().getCode_1001004().toString();
+            }
+        }else if (jsonArray.size()>1){
+            return MessageCode.getInstance().getCode_1001004().toString();
+        }else{
+            return MessageCode.getInstance().getCode_1001007().toString();
+        }
+    }
+
+    /**
+     * 修改信息
+     */
+    @RequestMapping(value="setAfterCustomer")
+    @ResponseBody
+    public String InformationSetAfterCustomer(@RequestBody String data){
+        Person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
+        Person_AfterCustomer = CurrencyInfo.getInstance().getPerson_AfterCustomern(UnDecoder.getInstance().getUnCode(data));
+        jsonArray = Currency.getInstance().getLoginStart(Person);
+        if (jsonArray.size()==1){
+            if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),Person)){
+                if(CurrencyInfo.getInstance().AfterCustomer(Person_AfterCustomer)!=0){
+                    return MessageCode.getInstance().getCode_1002005().toString();
+                }else {
+                    return MessageCode.getInstance().getCode_1002002().toString();
+                }
+            }else {
+                return MessageCode.getInstance().getCode_1001004().toString();
+            }
+        }else if (jsonArray.size()>1){
+            return MessageCode.getInstance().getCode_1001004().toString();
+        }else{
+            return MessageCode.getInstance().getCode_1001007().toString();
+        }
+    }
+
+    /**
+     * 修改状态
+     */
+    @RequestMapping(value="setStartCustomer")
+    @ResponseBody
+    public String InformationSetAfterCustomerState(@RequestBody String data){
+        Person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
+        Person_AfterCustomer = CurrencyInfo.getInstance().getPerson_AfterCustomern(UnDecoder.getInstance().getUnCode(data));
+        jsonArray = Currency.getInstance().getLoginStart(Person);
+        if (jsonArray.size()==1){
+            if(Currency.getInstance().getLoginToken(jsonArray.get(0).getAsJsonObject(),Person)){
+                if(CurrencyInfo.getInstance().AfterCustomerState(Person_AfterCustomer)!=0){
                     return MessageCode.getInstance().getCode_1002005().toString();
                 }else {
                     return MessageCode.getInstance().getCode_1002002().toString();

@@ -2,12 +2,10 @@ package com.db_server.info;
 
 
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -204,7 +202,7 @@ public class Person_Info_name {
     private long Date2TimeStamp(String dateStr) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
-            return sdf.parse(dateStr+" 12:0:0").getTime()/1000;
+            return sdf.parse(dateStr+" 12:00:00").getTime()/1000;
         } catch (Exception e) {
             e.printStackTrace();
         }

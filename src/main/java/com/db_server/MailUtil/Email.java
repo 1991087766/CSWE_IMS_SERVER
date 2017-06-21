@@ -12,8 +12,32 @@ import java.util.Properties;
  * Created by NAVY on 2017/6/19.
  */
 public class Email {
-    EmailInfo mail = new EmailInfo();
-    public boolean sendHtmlMail(String subject,String content,String receiver){
+    private EmailInfo mail = new EmailInfo();
+    private String html;
+
+    private static Email instance;
+    public static Email getInstance(){
+        if (instance ==null){
+            synchronized (Email.class){
+                if (instance ==null){
+                    try {
+                        instance =new Email();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return instance;
+    }
+
+    /**
+     *
+     * @param content
+     * @param receiver
+     * @return
+     */
+    private boolean sendHtmlMail(String content,String receiver){
 
         boolean result = true;
 
@@ -23,11 +47,11 @@ public class Email {
             // 设定mail server
             senderImpl.setHost(mail.MailServer);
             senderImpl.setPort(mail.MailPost);
-            senderImpl.setUsername(mail.MailUsername);                             // 根据自己的情况,设置发件邮箱地址
-            senderImpl.setPassword(mail.MailPassword);                    // 根据自己的情况, 设置password
+            senderImpl.setUsername(mail.MailUsername);
+            senderImpl.setPassword(mail.MailPassword);
             senderImpl.setDefaultEncoding("UTF-8");
             Properties prop = new Properties();
-            prop.put("mail.smtp.auth", "true");                                 // 将这个参数设为true，让服务器进行认证,认证用户名和密码是否正确
+            prop.put("mail.smtp.auth", "true");
             prop.put("mail.smtp.ssl.enable", "true");
             prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
             senderImpl.setJavaMailProperties(prop);
@@ -39,7 +63,7 @@ public class Email {
             // 设置收件人，寄件人
             messageHelper.setTo(receiver);
             messageHelper.setFrom(mail.MailUsername);
-            messageHelper.setSubject(subject);
+            messageHelper.setSubject(mail.MailSubject);
             // true 表示启动HTML格式的邮件
             messageHelper.setText(content,true);
 
@@ -48,37 +72,41 @@ public class Email {
         } catch (MessagingException e) {
             // TODO Auto-generated catch block
             result = false;
-//            logger.info("EmailUtils.method [sendHtmlMail]: email send result-" + result +",error message-" + e);
         }
 
         return result;
     }
-//    public static String getHtmlStr(JsonArray data, String receiver, int day){
-//
-//        JsonObject json = data.get(0).getAsJsonObject();
-//        String title = json.get("task_tittle").getAsString();
-        // NO.1、获取收件人名
-//        String receiverName = getEmailStr(receiver);
-        // NO.2、获取邮件表格
-//        String emailTable = getTableStr(data);
-        // NO.3、获取邮件时间
-//        String emailDate = Date2Str.getCurrentDate2();
-//
-//        String html = "<html><head></head><body>"
-//                + "<p>" +receiverName+" 您好,</p>"
-//                + "<p>&nbsp;&nbsp;&nbsp;&nbsp;生产日程-<font size=\"4\" color=\"#FF0000\" face=\"Verdana\" >"+title+"</font>中的下列任务将于<font size=\"4\" color=\"#FF0000\" face=\"Verdana\" >"+day+"</font>天后开始启动，请关注:</p>"
-//                + "<div style=\"padding-left:20px\">"
-//                + "<table border=\"1px\" cellspacing=\"0px\" style=\"border-collapse:collapse\">"
-//                + "<tr>"
-//                + "<td>任务名</td><td>启动时间</td><td>结束时间</td>"
-//                + "</tr>"
-//                + emailTable
-//                + "</table></div>"
-//                + "<p>&nbsp;&nbsp;&nbsp;&nbsp;每项任务的详细情况,请登陆 "
-//                + "<a href=\"http://100.78.205.244:8080\"><font size=\"4\" color=\"#FF0000\">项目综合管理&评价系统</font></a> 查看!</p>"
-//                + "<p>项目综合管理&评价系统</br>"+emailDate+"</p>"
-//                + "</body></html>";
-//
-//        return html;
-//    }
+    public void SondHtmlMail(String NAME,String Assect, String PWD, String Target){
+
+        html = "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <style type=\"text/css\">\n" +
+                "        span{\n" +
+                "            font-family: 楷体;\n" +
+                "            font-weight: bold;\n" +
+                "            font-size: 20px;\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "<div style=\"margin-left: 20px;width: 600px;height: 360px;position:absolute;background-color: aqua;border: 2px solid darkgray;border-radius: 20px\">\n" +
+                "    <div style=\"width: 560px; height: auto;margin-top:10px;margin-left: 10px\">\n" +
+                "        <span style=\"color: blue\">"+NAME+"</span><span> ,您好！</span><br><br>\n" +
+                "        <span style=\"color: darkorange; border: 1px solid\">您的账户已成功激活！</span><br><br>\n" +
+                "        <span>账号：</span><span style=\"color: green\">"+Assect+"</span><br>\n" +
+                "        <span>初始密码：</span><span style=\"color: green\">"+PWD+"</span><br><br>\n" +
+                "        <span style=\"color: red\">请及时修改密码，修改密码后请立即删除此邮件，以防泄露！</span>\n" +
+                "        <br><br><br><br>\n" +
+                "        <span>IMS工作平台</span><br>\n" +
+                "        <span>服务器管理：</span><span>NavyXU</span><br>\n" +
+                "        <span>联系方式：</span><span>Navy_XU@sina.cn</span>\n" +
+                "    </div>\n" +
+                "</div>\n" +
+                "</body>\n" +
+                "</html>";
+
+        sendHtmlMail(html,Target);
+    }
 }

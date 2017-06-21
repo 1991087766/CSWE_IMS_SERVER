@@ -113,11 +113,7 @@ public class Person_addAccount {
 
     public String getInfoData(String ID){
         setPwd();
-        return "['"+ID+"','"+getUsername()+"','"+getPwd32()+"','"+getGender()+"','"+getDepartment()+"','"+getAddress()+"','"+getPhone()+"','"+getMail()+"',"+getAdmin()+",'"+getName()+"',"+null+"]";
-    }
-    public String getDeparData(String ID){
-
-        return "['"+ID+"','"+getName()+"','"+getDepartment()+"','"+getLeader()+"','在职','"+ID+"','—'"+",'"+getAddress()+"',"+null+"]";
+        return "['IMS"+ID+"','"+getUsername()+"','"+getPwd32()+"','"+getGender()+"','"+getDepartment()+"','"+getAddress()+"','"+getPhone()+"','"+getMail()+"',"+getAdmin()+",'"+getName()+"','"+getLeader()+"','在职','"+ID+"','—']";
     }
 
 }

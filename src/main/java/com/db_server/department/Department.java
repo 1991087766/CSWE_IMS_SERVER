@@ -1,5 +1,6 @@
 package com.db_server.department;
 
+import com.db_server.MailUtil.Email;
 import com.db_server.login.Currency;
 import com.db_server.login.Person_login;
 import com.db_server.util.MessageCode;
@@ -141,12 +142,12 @@ public class Department {
             if (jsonArray.size()==1){
                 if(admin==2){
                     jsonArray = CurrencyDepar.getInstance().getUserList(addAccount);
-
                     if(jsonArray.size()<1){
                         Id += System.currentTimeMillis();
-                        if(CurrencyDepar.getInstance().setInfo(addAccount.getInfoData(Id))>0
-                                && CurrencyDepar.getInstance().setDepartment(addAccount.getDeparData(Id))>0
-                                ){
+                        if(CurrencyDepar.getInstance().setInfo(addAccount.getInfoData(Id))>0){
+                            if(addAccount.getMail().contains("@")&&addAccount.getMail().length()>6){
+                                Email.getInstance().SondHtmlMail(addAccount.getName(),addAccount.getUsername(),addAccount.getPwd8(),addAccount.getMail());
+                            }
                             return MessageCode.getInstance().getCode_1002006().toString();
                         }else {
                             return MessageCode.getInstance().getCode_1002002().toString();

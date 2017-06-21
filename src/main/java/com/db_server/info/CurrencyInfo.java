@@ -54,6 +54,12 @@ public class CurrencyInfo {
         return gson.fromJson(person.getInformation(),Person_information.class);
     }
 
+    public Person_AfterCustomer getPerson_AfterCustomern(String json){
+        obj = (JsonObject)parser.parse(json);
+        person= gson.fromJson(obj,Person_information.class);
+        return gson.fromJson(person.getSearch(),Person_AfterCustomer.class);
+    }
+
     /**
      * 获取数据信息
      * @param person_information
@@ -156,7 +162,7 @@ public class CurrencyInfo {
     }
 
     /**
-     * 修改
+     * 修改客服
      * @param person_information
      * @return
      */
@@ -181,5 +187,84 @@ public class CurrencyInfo {
 
         return MySqlUtil.getInstance().sql_data_alter(obj);
     }
+
+    /**
+     * 修改客服
+     * @param afterCustomer
+     * @return
+     */
+    public int AfterCustomer(Person_AfterCustomer afterCustomer){
+        obj = new JsonObject();
+        obj.addProperty("library","db_server");
+        obj.addProperty("SurfaceName","db_customer_all");
+
+        list_title = new ArrayList();
+        list_info = new ArrayList();
+        list_title.add("客户名称");
+        list_info.add(afterCustomer.getA2());
+        list_title.add("车牌号");
+        list_info.add(afterCustomer.getA3());
+        list_title.add("客服");
+        list_info.add(afterCustomer.getA4());
+        list_title.add("车架号");
+        list_info.add(afterCustomer.getA5());
+        list_title.add("品牌");
+        list_info.add(afterCustomer.getA6());
+        list_title.add("车型号");
+        list_info.add(afterCustomer.getA7());
+        list_title.add("发动机号");
+        list_info.add(afterCustomer.getA8());
+        list_title.add("固定电话");
+        list_info.add(afterCustomer.getA9());
+        list_title.add("手机");
+        list_info.add(afterCustomer.getA10());
+        list_title.add("身份证号");
+        list_info.add(afterCustomer.getA11());
+        list_title.add("登记日期");
+        list_info.add(afterCustomer.getA12());
+        list_title.add("交强险日期");
+        list_info.add(afterCustomer.getA13());
+        list_title.add("商业险日期");
+        list_info.add(afterCustomer.getA14());
+        list_title.add("投保公司");
+        list_info.add(afterCustomer.getA15());
+        list_title.add("座位数");
+        list_info.add(afterCustomer.getA16());
+        list_title.add("客户类型");
+        list_info.add(afterCustomer.getA17());
+        list_title.add("地址");
+        list_info.add(afterCustomer.getA18());
+        list_title.add("备注");
+        list_info.add(afterCustomer.getA19());
+        list_title.add("状态");
+        list_info.add(afterCustomer.getA20());
+        System.out.println(list_title.toString());
+        System.out.println(list_info.toString());
+        obj.add("ColumnName",parser.parse(list_title.toString()));
+        obj.add("Value",parser.parse(list_info.toString()));
+
+        return MySqlUtil.getInstance().sql_data_alter(afterCustomer.getA1(),obj);
+    }
+    /**
+     * 修改客服
+     * @param afterCustomer
+     * @return
+     */
+    public int AfterCustomerState(Person_AfterCustomer afterCustomer){
+        obj = new JsonObject();
+        obj.addProperty("library","db_server");
+        obj.addProperty("SurfaceName","db_customer_all");
+
+        list_title = new ArrayList();
+        list_info = new ArrayList();
+        list_title.add("状态");
+        list_info.add(afterCustomer.getA20());
+        obj.add("ColumnName",parser.parse(list_title.toString()));
+        obj.add("Value",parser.parse(list_info.toString()));
+
+        System.out.println(obj.toString());
+        return MySqlUtil.getInstance().sql_data_alter(afterCustomer.getA1(),obj);
+    }
+
 
 }
