@@ -77,6 +77,20 @@ public class MessageCode {
     }
 
     /**
+     * 返回用户信息
+     * @param Object
+     * @return
+     */
+    public JsonObject getCode_1001000(JsonObject Object){
+        object = new JsonObject();
+        object.addProperty("MessageCode",1001000);
+        jsonObject = new JsonObject();
+        jsonObject.add("code", object);
+        jsonObject.add("information", Object);
+        return jsonObject;
+    }
+
+    /**
      * 返回成功信息
      * @param jsonArray
      * @param pages
@@ -239,13 +253,13 @@ public class MessageCode {
         return jsonObject;
     }
     /**
-     *
+     * 退出登录成功
      * @return
      */
     public JsonObject getCode_1002004(){
         object = new JsonObject();
         object.addProperty("MessageCode",1002004);
-        object.addProperty("MsgInfo","");
+        object.addProperty("MsgInfo","退出登录成功！");
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;
@@ -271,6 +285,18 @@ public class MessageCode {
         object = new JsonObject();
         object.addProperty("MessageCode",1002006);
         object.addProperty("MsgInfo","添加成功！");
+        jsonObject = new JsonObject();
+        jsonObject.add("code", object);
+        return jsonObject;
+    }
+    /**
+     * 密码修改成功！
+     * @return
+     */
+    public JsonObject getCode_1002007(){
+        object = new JsonObject();
+        object.addProperty("MessageCode",1002007);
+        object.addProperty("MsgInfo","密码修改成功！");
         jsonObject = new JsonObject();
         jsonObject.add("code", object);
         return jsonObject;

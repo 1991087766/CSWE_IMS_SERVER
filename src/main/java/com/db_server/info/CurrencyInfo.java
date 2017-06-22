@@ -104,6 +104,10 @@ public class CurrencyInfo {
             list_title.add("状态");
             list_info.add(person_information.getState());
         }
+        if (person_information.getPosition()!=null && person_information.getPosition()!=""&& !person_information.getPosition().equals("ALL")){
+            list_title.add("地址");
+            list_info.add("%"+person_information.getPosition()+"%");
+        }
 
         list_info_date = new ArrayList();
         if( !person_information.getCompulsoryInsurance().getAsJsonObject().get("startDate").isJsonNull() ){
@@ -189,7 +193,7 @@ public class CurrencyInfo {
     }
 
     /**
-     * 修改客服
+     * 修改客户信息
      * @param afterCustomer
      * @return
      */
@@ -238,15 +242,13 @@ public class CurrencyInfo {
         list_info.add(afterCustomer.getA19());
         list_title.add("状态");
         list_info.add(afterCustomer.getA20());
-        System.out.println(list_title.toString());
-        System.out.println(list_info.toString());
         obj.add("ColumnName",parser.parse(list_title.toString()));
         obj.add("Value",parser.parse(list_info.toString()));
 
         return MySqlUtil.getInstance().sql_data_alter(afterCustomer.getA1(),obj);
     }
     /**
-     * 修改客服
+     * 修改状态
      * @param afterCustomer
      * @return
      */
@@ -262,7 +264,6 @@ public class CurrencyInfo {
         obj.add("ColumnName",parser.parse(list_title.toString()));
         obj.add("Value",parser.parse(list_info.toString()));
 
-        System.out.println(obj.toString());
         return MySqlUtil.getInstance().sql_data_alter(afterCustomer.getA1(),obj);
     }
 

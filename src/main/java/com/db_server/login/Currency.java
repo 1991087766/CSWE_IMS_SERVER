@@ -152,6 +152,24 @@ public class Currency {
     }
 
     /**
+     * 获取用户信息
+     * @param username
+     * @return
+     */
+    public JsonArray getUserInfo(String username){
+        JsonObject obj = new JsonObject();
+        obj.addProperty("library","db_server");
+        obj.addProperty("SurfaceName","db_info");
+        obj.add("SelectName", parser.parse("['账号']"));
+        list_info = new ArrayList();
+        list_info.add(username);
+        obj.add("SelectValue", parser.parse(list_info.toString()));
+        JsonArray jsonArray = MySqlUtil.getInstance().sql_data_select(obj,12,"LIKE","AND");
+
+        return jsonArray;
+    }
+
+    /**
      * 检测登录
      * @return
      */
@@ -180,7 +198,6 @@ public class Currency {
         list_info.add(person.getUsername());
         list_info.add(token);
         list_info.add(IP);
-        list_info.add(null);
         obj.add("SelectValue",parser.parse(list_info.toString()));
         MySqlUtil.getInstance().sql_surface_insert(obj);
         return token;

@@ -44,6 +44,7 @@ public class Script {
     private void setLogin(){
         MySqlUtil.getInstance().sql_connect("db_server");
         while (true){
+            System.out.println("检查过期账户");
             jsonArray = Currency.getInstance().getLoginInspect();
             if(jsonArray.size()>0){
                 for (int i = 0; i<jsonArray.size();i++){

@@ -12,8 +12,8 @@ public class ServiceApplication {
 
 
 	public static void main(String[] args) {
+		SpringApplication.run(ServiceApplication.class, args);
 		//检测登录
 		new Script().inspect_login();
-		SpringApplication.run(ServiceApplication.class, args);
 	}
 }
