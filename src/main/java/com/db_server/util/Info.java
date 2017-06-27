@@ -8,7 +8,7 @@ public class Info {
     private static final String parameter = "?characterEncoing=utf-8&useSSL=false";
     private static final String name = "com.mysql.jdbc.Driver";
     private static final String sqluser = "root";
-    private static final String sqlpassword = "";
+    private static final String sqlpassword = "xujunji";
 
     public String getUrl() {
         return url;
