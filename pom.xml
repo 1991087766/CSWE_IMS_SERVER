@@ -5,7 +5,7 @@
 
 	<groupId>com.db_server</groupId>
 	<artifactId>service</artifactId>
-	<version>0.0.2</version>
+	<version>0.1</version>
 	<!--<packaging>jar</packaging>-->
 	<packaging>war</packaging>
 
