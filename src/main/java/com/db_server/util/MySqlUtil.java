@@ -285,7 +285,7 @@ public class MySqlUtil {
             if (WHERE.replaceAll(" ","").replaceAll("\t","").length()!=0){
                 WHERE = " WHERE "+WHERE;
             }
-//            System.out.println("SELECT:"+"SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
+            System.out.println("SELECT:"+"SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
 
             ResultSet rs = status.createStatement().executeQuery("SELECT * FROM "+jsonObject.get("SurfaceName").getAsString()+WHERE);
             try {
@@ -1138,6 +1138,7 @@ public class MySqlUtil {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        System.out.println(data);
         return data;
     }
     public String getSqlDevicesData(ResultSet rs){

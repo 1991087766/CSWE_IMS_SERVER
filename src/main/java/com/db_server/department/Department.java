@@ -143,12 +143,16 @@ public class Department {
                 if(admin==2){
                     jsonArray = CurrencyDepar.getInstance().getUserList(addAccount);
                     if(jsonArray.size()<1){
-                        Id += System.currentTimeMillis();
+                        Id = System.currentTimeMillis()+"";
                         if(CurrencyDepar.getInstance().setInfo(addAccount.getInfoData(Id))>0){
                             if(addAccount.getMail().contains("@")&&addAccount.getMail().length()>6){
                                 Email.getInstance().SondHtmlMail(addAccount.getName(),addAccount.getUsername(),addAccount.getPwd8(),addAccount.getMail());
+
+                                return MessageCode.getInstance().getCode_1002006().toString();
+                            }else {
+                                return MessageCode.getInstance().getCode_1003001().toString();
                             }
-                            return MessageCode.getInstance().getCode_1002006().toString();
+
                         }else {
                             return MessageCode.getInstance().getCode_1002002().toString();
                         }

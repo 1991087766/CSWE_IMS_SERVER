@@ -27,13 +27,14 @@ public class login implements EmbeddedServletContainerCustomizer {
 
 
     public void customize(ConfigurableEmbeddedServletContainer container) {
-        container.setPort(8802);
+        container.setPort(8093);
     }
 
     @RequestMapping(value="login")
     @ResponseBody
     public String login(@RequestBody String data,HttpServletRequest request){
 
+//        System.out.println(UnDecoder.getInstance().getUnCode(data).toString());
 //        return MessageCode.getInstance().getCode_1001000().toString();
         person = Currency.getInstance().getPerson_info(UnDecoder.getInstance().getUnCode(data));
         jsonArray = Currency.getInstance().getUserList(person);

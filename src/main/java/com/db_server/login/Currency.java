@@ -89,6 +89,7 @@ public class Currency {
         list_info.add(person.getUsername());
         obj.add("SelectValue",parser.parse(list_info.toString()));
         JsonArray jsonArray = MySqlUtil.getInstance().sql_data_select(obj,"LIKE","AND",person.getPages());
+
         return jsonArray;
     }
     public JsonArray getCustomerService(){

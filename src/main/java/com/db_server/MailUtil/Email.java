@@ -91,7 +91,7 @@ public class Email {
                 "    </style>\n" +
                 "</head>\n" +
                 "<body>\n" +
-                "<div style=\"margin-left: 20px;width: 600px;height: 360px;position:absolute;background-color: aqua;border: 2px solid darkgray;border-radius: 20px\">\n" +
+                "<div style=\"margin-left: 20px;width: 600px;height: 260px;position:absolute;background-color: aqua;border: 2px solid darkgray;border-radius: 20px\">\n" +
                 "    <div style=\"width: 560px; height: auto;margin-top:10px;margin-left: 10px\">\n" +
                 "        <span style=\"color: blue\">"+NAME+"</span><span> ,您好！</span><br><br>\n" +
                 "        <span style=\"color: darkorange; border: 1px solid\">您的账户已成功激活！</span><br><br>\n" +

@@ -6,8 +6,8 @@
 	<groupId>com.db_server</groupId>
 	<artifactId>service</artifactId>
 	<version>0.1</version>
-	<!--<packaging>jar</packaging>-->
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
+	<!--<packaging>war</packaging>-->
 
 	<name>service</name>
 	<description>Demo project for Spring Boot</description>
